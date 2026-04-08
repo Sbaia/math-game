@@ -1,0 +1,1752 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Matematica Divertente!</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', cursive;
+      background: linear-gradient(135deg, #a8edea 0%, #fed6e3 50%, #d4fc79 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: #ff6b6b;
+      text-shadow: 2px 2px 0 #fff;
+      margin-bottom: 6px;
+      text-align: center;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: #5f27cd;
+      margin-bottom: 18px;
+      text-align: center;
+    }
+
+    .animals {
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+
+    /* ===== HOME MENU ===== */
+    .menu {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      max-width: 700px;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .menu-card {
+      background: #fff;
+      border-radius: 24px;
+      padding: 28px 20px;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+      border: 4px solid transparent;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .menu-card:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 10px 24px rgba(0,0,0,0.18);
+    }
+
+    .menu-card.c1 { border-color: #f39c12; }
+    .menu-card.c2 { border-color: #27ae60; }
+    .menu-card.c3 { border-color: #3498db; }
+    .menu-card.c4 { border-color: #9b59b6; }
+
+    .menu-icon {
+      font-size: 3.5rem;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .menu-title {
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: #2c3e50;
+      margin-bottom: 6px;
+    }
+
+    .menu-desc {
+      font-size: 0.95rem;
+      color: #7f8c8d;
+    }
+
+    /* ===== GAME VIEWS ===== */
+    .view { display: none; width: 100%; flex-direction: column; align-items: center; }
+    .view.active { display: flex; }
+
+    /* ===== SHARED GAME STYLING ===== */
+    .game-card {
+      background: rgba(255,255,255,0.7);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      margin-bottom: 20px;
+      max-width: 720px;
+      width: 100%;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 14px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn {
+      font-family: inherit;
+      font-size: 1.2rem;
+      font-weight: bold;
+      padding: 12px 28px;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(0,0,0,0.2); }
+    .btn:active { transform: translateY(0); }
+
+    .btn-check { background: linear-gradient(135deg, #f39c12, #e67e22); color: #fff; }
+    .btn-new   { background: linear-gradient(135deg, #a29bfe, #6c5ce7); color: #fff; }
+    .btn-home  { background: linear-gradient(135deg, #74b9ff, #0984e3); color: #fff; }
+
+    .score-bar {
+      background: #fff;
+      border-radius: 50px;
+      padding: 10px 24px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      font-size: 1.1rem;
+      color: #2c3e50;
+      margin-bottom: 12px;
+    }
+
+    .score-num { font-weight: bold; color: #e67e22; font-size: 1.3rem; }
+
+    .message {
+      font-size: 1.6rem;
+      font-weight: bold;
+      min-height: 44px;
+      margin-bottom: 10px;
+      text-align: center;
+      animation: pop 0.4s ease;
+    }
+
+    @keyframes pop {
+      0%   { transform: scale(0); }
+      60%  { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+
+    /* ===== GAME 1: TABLE ===== */
+    table { border-collapse: separate; border-spacing: 6px; margin: 0 auto; }
+
+    .header-cell, .row-header {
+      background: #fff;
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 1.4rem;
+      font-weight: bold;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      min-width: 54px;
+    }
+
+    .op-cell {
+      font-size: 1.9rem;
+      font-weight: bold;
+      border-radius: 12px;
+      padding: 10px 14px;
+      text-align: center;
+    }
+    .op-cell-add { background: #d5f5e3; color: #27ae60; }
+    .op-cell-sub { background: #fadbd8; color: #c0392b; }
+
+    .input-cell {
+      position: relative;
+      background: #fffde7;
+      border-radius: 12px;
+      border: 3px solid #e0e0e0;
+      padding: 0;
+      text-align: center;
+      transition: border-color 0.3s, background 0.3s;
+    }
+    .input-cell.correct { border-color: #2ecc71; background: #eafaf1; }
+    .input-cell.wrong   { border-color: #e74c3c; background: #fdf2f2; }
+
+    .answer-input {
+      width: 56px;
+      height: 46px;
+      font-size: 1.4rem;
+      font-family: inherit;
+      text-align: center;
+      border: none;
+      border-radius: 10px;
+      outline: none;
+      background: transparent;
+    }
+
+    .answer-input::-webkit-outer-spin-button,
+    .answer-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .answer-input { -moz-appearance: textfield; }
+    .answer-input:focus { box-shadow: 0 0 0 3px rgba(243, 156, 18, 0.4); }
+    .answer-input:disabled { color: #27ae60; font-weight: bold; }
+
+    .cell-feedback {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      font-size: 1.4rem;
+      animation: pop 0.4s ease;
+      z-index: 10;
+    }
+
+    .table-title {
+      font-size: 1.4rem;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 12px;
+      padding: 6px 18px;
+      border-radius: 30px;
+      display: inline-block;
+    }
+    .table-title-add { background: #d5f5e3; color: #27ae60; }
+    .table-title-sub { background: #fadbd8; color: #c0392b; }
+    .table-title-wrap { text-align: center; margin-bottom: 8px; }
+
+    /* ===== GAME 2: MISSING NUMBER ===== */
+    .missing-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: #fff;
+      border-radius: 16px;
+      padding: 14px 20px;
+      margin-bottom: 12px;
+      font-size: 1.8rem;
+      font-weight: bold;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+      border: 3px solid #e0e0e0;
+      position: relative;
+      transition: border-color 0.3s, background 0.3s;
+    }
+    .missing-row.correct { border-color: #2ecc71; background: #eafaf1; }
+    .missing-row.wrong   { border-color: #e74c3c; background: #fdf2f2; }
+
+    .missing-row .op-plus  { color: #27ae60; }
+    .missing-row .op-minus { color: #c0392b; }
+
+    .missing-input {
+      width: 70px;
+      height: 50px;
+      font-size: 1.8rem;
+      font-family: inherit;
+      text-align: center;
+      border: 3px dashed #f39c12;
+      border-radius: 12px;
+      outline: none;
+      background: #fffde7;
+      font-weight: bold;
+    }
+    .missing-input::-webkit-outer-spin-button,
+    .missing-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .missing-input { -moz-appearance: textfield; }
+    .missing-input:focus { border-style: solid; box-shadow: 0 0 0 3px rgba(243, 156, 18, 0.3); }
+    .missing-input:disabled { border-color: #2ecc71; color: #27ae60; background: #eafaf1; }
+
+    /* ===== GAME 3: COUNT EMOJI ===== */
+    .count-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      background: #fff;
+      border-radius: 16px;
+      padding: 14px 20px;
+      margin-bottom: 12px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+      border: 3px solid #e0e0e0;
+      flex-wrap: wrap;
+      transition: border-color 0.3s, background 0.3s;
+    }
+    .count-row.correct { border-color: #2ecc71; background: #eafaf1; }
+    .count-row.wrong   { border-color: #e74c3c; background: #fdf2f2; }
+
+    .count-emojis {
+      font-size: 1.8rem;
+      letter-spacing: 4px;
+      flex: 1;
+      min-width: 150px;
+      word-break: break-word;
+    }
+
+    .count-equals {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #2c3e50;
+    }
+
+    .count-input {
+      width: 70px;
+      height: 50px;
+      font-size: 1.6rem;
+      font-family: inherit;
+      text-align: center;
+      border: 3px solid #bbb;
+      border-radius: 12px;
+      outline: none;
+      background: #fffde7;
+      font-weight: bold;
+    }
+    .count-input::-webkit-outer-spin-button,
+    .count-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .count-input { -moz-appearance: textfield; }
+    .count-input:focus { border-color: #f39c12; box-shadow: 0 0 0 3px rgba(243, 156, 18, 0.3); }
+    .count-input:disabled { border-color: #2ecc71; color: #27ae60; background: #eafaf1; }
+
+    /* ===== GAME 4: COMPARE ===== */
+    .compare-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      background: #fff;
+      border-radius: 16px;
+      padding: 14px 20px;
+      margin-bottom: 12px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+      border: 3px solid #e0e0e0;
+      transition: border-color 0.3s, background 0.3s;
+    }
+    .compare-row.correct { border-color: #2ecc71; background: #eafaf1; }
+    .compare-row.wrong   { border-color: #e74c3c; background: #fdf2f2; }
+
+    .compare-num {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #2c3e50;
+      min-width: 50px;
+      text-align: center;
+    }
+
+    .compare-ops {
+      display: flex;
+      gap: 8px;
+    }
+
+    .compare-btn {
+      width: 50px;
+      height: 50px;
+      font-size: 1.6rem;
+      font-weight: bold;
+      font-family: inherit;
+      border: 3px solid #bbb;
+      border-radius: 12px;
+      background: #fffde7;
+      cursor: pointer;
+      color: #2c3e50;
+      transition: transform 0.15s, border-color 0.2s, background 0.2s;
+    }
+    .compare-btn:hover { transform: scale(1.08); border-color: #f39c12; }
+    .compare-btn.selected { background: #f39c12; color: #fff; border-color: #e67e22; }
+    .compare-btn.locked-correct { background: #2ecc71; color: #fff; border-color: #27ae60; cursor: default; }
+    .compare-btn.locked-wrong { background: #e74c3c; color: #fff; border-color: #c0392b; }
+    .compare-btn:disabled { cursor: default; }
+    .compare-btn:disabled:hover { transform: none; }
+
+    /* ===== GAME 5: FRIENDS OF 10 ===== */
+    .tens-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+
+    .tens-tile {
+      background: #fffde7;
+      border: 4px solid #e0e0e0;
+      border-radius: 16px;
+      padding: 20px 0;
+      font-size: 2rem;
+      font-weight: bold;
+      color: #2c3e50;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.15s, border-color 0.2s, background 0.2s;
+      user-select: none;
+    }
+    .tens-tile:hover { transform: scale(1.05); border-color: #f39c12; }
+    .tens-tile.selected { background: #f39c12; color: #fff; border-color: #e67e22; }
+    .tens-tile.matched {
+      background: #2ecc71;
+      color: #fff;
+      border-color: #27ae60;
+      cursor: default;
+      animation: pop 0.4s ease;
+    }
+    .tens-tile.matched:hover { transform: none; }
+    .tens-tile.wrong-flash {
+      background: #e74c3c;
+      color: #fff;
+      border-color: #c0392b;
+    }
+
+    /* ===== GAME 6: SEQUENCES ===== */
+    .seq-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: #fff;
+      border-radius: 16px;
+      padding: 14px 18px;
+      margin-bottom: 12px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+      border: 3px solid #e0e0e0;
+      flex-wrap: wrap;
+      transition: border-color 0.3s, background 0.3s;
+    }
+    .seq-row.correct { border-color: #2ecc71; background: #eafaf1; }
+    .seq-row.wrong   { border-color: #e74c3c; background: #fdf2f2; }
+
+    .seq-num {
+      font-size: 1.6rem;
+      font-weight: bold;
+      color: #2c3e50;
+      min-width: 40px;
+      text-align: center;
+    }
+    .seq-arrow { font-size: 1.4rem; color: #7f8c8d; }
+
+    .seq-input {
+      width: 60px;
+      height: 48px;
+      font-size: 1.6rem;
+      font-family: inherit;
+      text-align: center;
+      border: 3px dashed #3498db;
+      border-radius: 12px;
+      outline: none;
+      background: #fffde7;
+      font-weight: bold;
+    }
+    .seq-input::-webkit-outer-spin-button,
+    .seq-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .seq-input { -moz-appearance: textfield; }
+    .seq-input:focus { border-style: solid; box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3); }
+    .seq-input:disabled { border-color: #2ecc71; color: #27ae60; background: #eafaf1; }
+
+    /* ===== GAME 7: EVEN/ODD ===== */
+    .eo-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      background: #fff;
+      border-radius: 16px;
+      padding: 14px 20px;
+      margin-bottom: 12px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+      border: 3px solid #e0e0e0;
+      transition: border-color 0.3s, background 0.3s;
+    }
+    .eo-row.correct { border-color: #2ecc71; background: #eafaf1; }
+    .eo-row.wrong   { border-color: #e74c3c; background: #fdf2f2; }
+
+    .eo-num {
+      font-size: 2.2rem;
+      font-weight: bold;
+      color: #2c3e50;
+      min-width: 70px;
+      text-align: center;
+    }
+
+    .eo-btn {
+      font-family: inherit;
+      font-size: 1.2rem;
+      font-weight: bold;
+      padding: 12px 24px;
+      border: 3px solid #bbb;
+      border-radius: 50px;
+      background: #fffde7;
+      color: #2c3e50;
+      cursor: pointer;
+      transition: transform 0.15s, background 0.2s, border-color 0.2s;
+    }
+    .eo-btn:hover { transform: scale(1.05); border-color: #f39c12; }
+    .eo-btn.locked-correct { background: #2ecc71; color: #fff; border-color: #27ae60; }
+    .eo-btn.locked-wrong { background: #e74c3c; color: #fff; border-color: #c0392b; }
+    .eo-btn:disabled { cursor: default; }
+    .eo-btn:disabled:hover { transform: none; }
+
+    /* ===== GAME 8: BEFORE / AFTER ===== */
+    .ba-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      background: #fff;
+      border-radius: 16px;
+      padding: 14px 20px;
+      margin-bottom: 12px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+      border: 3px solid #e0e0e0;
+      transition: border-color 0.3s, background 0.3s;
+    }
+    .ba-row.correct { border-color: #2ecc71; background: #eafaf1; }
+    .ba-row.wrong   { border-color: #e74c3c; background: #fdf2f2; }
+
+    .ba-num {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #2c3e50;
+      background: #ecf0f1;
+      padding: 8px 18px;
+      border-radius: 12px;
+      min-width: 60px;
+      text-align: center;
+    }
+
+    .ba-arrow { font-size: 1.4rem; color: #7f8c8d; }
+
+    .ba-input {
+      width: 70px;
+      height: 50px;
+      font-size: 1.8rem;
+      font-family: inherit;
+      text-align: center;
+      border: 3px dashed #9b59b6;
+      border-radius: 12px;
+      outline: none;
+      background: #fffde7;
+      font-weight: bold;
+    }
+    .ba-input::-webkit-outer-spin-button,
+    .ba-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .ba-input { -moz-appearance: textfield; }
+    .ba-input:focus { border-style: solid; box-shadow: 0 0 0 3px rgba(155, 89, 182, 0.3); }
+    .ba-input:disabled { border-color: #2ecc71; color: #27ae60; background: #eafaf1; }
+
+    /* ===== GAME 9: WORD PROBLEMS ===== */
+    .story-row {
+      background: #fff;
+      border-radius: 18px;
+      padding: 18px 22px;
+      margin-bottom: 14px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+      border: 3px solid #e0e0e0;
+      transition: border-color 0.3s, background 0.3s;
+    }
+    .story-row.correct { border-color: #2ecc71; background: #eafaf1; }
+    .story-row.wrong   { border-color: #e74c3c; background: #fdf2f2; }
+
+    .story-text {
+      font-size: 1.2rem;
+      color: #2c3e50;
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+
+    .story-answer {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+
+    .story-label { font-size: 1.1rem; font-weight: bold; color: #e67e22; }
+
+    .story-input {
+      width: 80px;
+      height: 50px;
+      font-size: 1.6rem;
+      font-family: inherit;
+      text-align: center;
+      border: 3px solid #e67e22;
+      border-radius: 12px;
+      outline: none;
+      background: #fffde7;
+      font-weight: bold;
+    }
+    .story-input::-webkit-outer-spin-button,
+    .story-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .story-input { -moz-appearance: textfield; }
+    .story-input:focus { box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.3); }
+    .story-input:disabled { border-color: #2ecc71; color: #27ae60; background: #eafaf1; }
+
+    /* ===== GAME 10: GUESS THE NUMBER ===== */
+    .guess-card {
+      background: #fff;
+      border-radius: 24px;
+      padding: 30px;
+      text-align: center;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .guess-title {
+      font-size: 1.5rem;
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+
+    .guess-attempts {
+      font-size: 1.1rem;
+      color: #7f8c8d;
+      margin-bottom: 16px;
+    }
+    .guess-attempts strong { color: #e67e22; font-size: 1.3rem; }
+
+    .guess-input-row {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-bottom: 20px;
+      align-items: center;
+    }
+
+    .guess-input {
+      width: 100px;
+      height: 60px;
+      font-size: 2rem;
+      font-family: inherit;
+      text-align: center;
+      border: 3px solid #e67e22;
+      border-radius: 14px;
+      outline: none;
+      background: #fffde7;
+      font-weight: bold;
+    }
+    .guess-input::-webkit-outer-spin-button,
+    .guess-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .guess-input { -moz-appearance: textfield; }
+    .guess-input:focus { box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.3); }
+
+    .guess-history {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      min-height: 40px;
+    }
+
+    .guess-chip {
+      background: #ecf0f1;
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 1rem;
+      font-weight: bold;
+    }
+    .guess-chip.lower { background: #fdf2f2; color: #c0392b; }
+    .guess-chip.higher { background: #fef5e7; color: #d35400; }
+    .guess-chip.found { background: #eafaf1; color: #27ae60; }
+
+    .guess-hint {
+      font-size: 1.4rem;
+      font-weight: bold;
+      min-height: 40px;
+      margin-bottom: 12px;
+    }
+
+    @media (max-width: 520px) {
+      h1 { font-size: 1.8rem; }
+      .menu { grid-template-columns: 1fr; }
+      .header-cell, .row-header { font-size: 1.1rem; padding: 8px 10px; min-width: 42px; }
+      .answer-input { width: 44px; height: 38px; font-size: 1.1rem; }
+      .missing-row { font-size: 1.4rem; padding: 10px 12px; }
+      .missing-input { width: 56px; height: 42px; font-size: 1.4rem; }
+      .count-emojis { font-size: 1.4rem; }
+      .compare-num { font-size: 1.5rem; }
+      .compare-btn { width: 42px; height: 42px; font-size: 1.3rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="animals">🐱 🐶 🐰 🦊 🐻 🐼 🦁 🐸</div>
+  <h1>Matematica Divertente!</h1>
+  <p class="subtitle" id="subtitle">Scegli un gioco!</p>
+
+  <!-- ===== HOME VIEW ===== -->
+  <div class="view active" id="view-home">
+    <div class="menu">
+      <div class="menu-card c1" onclick="showGame('table')">
+        <span class="menu-icon">🧮</span>
+        <div class="menu-title">Tabella</div>
+        <div class="menu-desc">Riempi la tavola di + o −</div>
+      </div>
+      <div class="menu-card c2" onclick="showGame('missing')">
+        <span class="menu-icon">🔍</span>
+        <div class="menu-title">Numero Mancante</div>
+        <div class="menu-desc">Trova il numero nascosto</div>
+      </div>
+      <div class="menu-card c3" onclick="showGame('count')">
+        <span class="menu-icon">🍎</span>
+        <div class="menu-title">Conta e Scrivi</div>
+        <div class="menu-desc">Quanti ce ne sono?</div>
+      </div>
+      <div class="menu-card c4" onclick="showGame('compare')">
+        <span class="menu-icon">⚖️</span>
+        <div class="menu-title">Più, Meno o Uguale?</div>
+        <div class="menu-desc">Confronta due numeri</div>
+      </div>
+      <div class="menu-card c1" onclick="showGame('tens')">
+        <span class="menu-icon">👫</span>
+        <div class="menu-title">Amici del 10</div>
+        <div class="menu-desc">Trova le coppie che fanno 10</div>
+      </div>
+      <div class="menu-card c2" onclick="showGame('seq')">
+        <span class="menu-icon">🔢</span>
+        <div class="menu-title">Sequenze</div>
+        <div class="menu-desc">Completa la serie di numeri</div>
+      </div>
+      <div class="menu-card c3" onclick="showGame('eo')">
+        <span class="menu-icon">⚡</span>
+        <div class="menu-title">Pari o Dispari?</div>
+        <div class="menu-desc">Riconosci i numeri</div>
+      </div>
+      <div class="menu-card c4" onclick="showGame('ba')">
+        <span class="menu-icon">🐣</span>
+        <div class="menu-title">Prima e Dopo</div>
+        <div class="menu-desc">Chi viene prima? Chi viene dopo?</div>
+      </div>
+      <div class="menu-card c1" onclick="showGame('story')">
+        <span class="menu-icon">📖</span>
+        <div class="menu-title">Problemi</div>
+        <div class="menu-desc">Storie da risolvere</div>
+      </div>
+      <div class="menu-card c2" onclick="showGame('guess')">
+        <span class="menu-icon">🎲</span>
+        <div class="menu-title">Indovina il Numero</div>
+        <div class="menu-desc">Più grande o più piccolo?</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== GAME 1: TABLE ===== -->
+  <div class="view" id="view-table">
+    <div class="score-bar"><span id="tableScoreText">Punteggio:</span> <span class="score-num" id="tableScore">0</span> / 20</div>
+    <div class="message" id="tableMessage"></div>
+    <div class="game-card" id="tableBlock"></div>
+    <div class="buttons">
+      <button class="btn btn-check" onclick="tableCheck()">Controlla!</button>
+      <button class="btn btn-new" onclick="tableNew()">Nuova Partita</button>
+      <button class="btn btn-home" onclick="showHome()">🏠 Menu</button>
+    </div>
+  </div>
+
+  <!-- ===== GAME 2: MISSING ===== -->
+  <div class="view" id="view-missing">
+    <div class="score-bar">Punteggio: <span class="score-num" id="missingScore">0</span> / 10</div>
+    <div class="message" id="missingMessage"></div>
+    <div class="game-card" id="missingBlock"></div>
+    <div class="buttons">
+      <button class="btn btn-check" onclick="missingCheck()">Controlla!</button>
+      <button class="btn btn-new" onclick="missingNew()">Nuova Partita</button>
+      <button class="btn btn-home" onclick="showHome()">🏠 Menu</button>
+    </div>
+  </div>
+
+  <!-- ===== GAME 3: COUNT ===== -->
+  <div class="view" id="view-count">
+    <div class="score-bar">Punteggio: <span class="score-num" id="countScore">0</span> / 8</div>
+    <div class="message" id="countMessage"></div>
+    <div class="game-card" id="countBlock"></div>
+    <div class="buttons">
+      <button class="btn btn-check" onclick="countCheck()">Controlla!</button>
+      <button class="btn btn-new" onclick="countNew()">Nuova Partita</button>
+      <button class="btn btn-home" onclick="showHome()">🏠 Menu</button>
+    </div>
+  </div>
+
+  <!-- ===== GAME 4: COMPARE ===== -->
+  <div class="view" id="view-compare">
+    <div class="score-bar">Punteggio: <span class="score-num" id="compareScore">0</span> / 10</div>
+    <div class="message" id="compareMessage"></div>
+    <div class="game-card" id="compareBlock"></div>
+    <div class="buttons">
+      <button class="btn btn-new" onclick="compareNew()">Nuova Partita</button>
+      <button class="btn btn-home" onclick="showHome()">🏠 Menu</button>
+    </div>
+  </div>
+
+  <!-- ===== GAME 5: FRIENDS OF 10 ===== -->
+  <div class="view" id="view-tens">
+    <div class="score-bar">Coppie trovate: <span class="score-num" id="tensScore">0</span> / 6</div>
+    <div class="message" id="tensMessage"></div>
+    <div class="game-card" id="tensBlock"></div>
+    <div class="buttons">
+      <button class="btn btn-new" onclick="tensNew()">Nuova Partita</button>
+      <button class="btn btn-home" onclick="showHome()">🏠 Menu</button>
+    </div>
+  </div>
+
+  <!-- ===== GAME 6: SEQUENCES ===== -->
+  <div class="view" id="view-seq">
+    <div class="score-bar">Punteggio: <span class="score-num" id="seqScore">0</span> / 8</div>
+    <div class="message" id="seqMessage"></div>
+    <div class="game-card" id="seqBlock"></div>
+    <div class="buttons">
+      <button class="btn btn-check" onclick="seqCheck()">Controlla!</button>
+      <button class="btn btn-new" onclick="seqNew()">Nuova Partita</button>
+      <button class="btn btn-home" onclick="showHome()">🏠 Menu</button>
+    </div>
+  </div>
+
+  <!-- ===== GAME 7: EVEN/ODD ===== -->
+  <div class="view" id="view-eo">
+    <div class="score-bar">Punteggio: <span class="score-num" id="eoScore">0</span> / 10</div>
+    <div class="message" id="eoMessage"></div>
+    <div class="game-card" id="eoBlock"></div>
+    <div class="buttons">
+      <button class="btn btn-new" onclick="eoNew()">Nuova Partita</button>
+      <button class="btn btn-home" onclick="showHome()">🏠 Menu</button>
+    </div>
+  </div>
+
+  <!-- ===== GAME 8: BEFORE/AFTER ===== -->
+  <div class="view" id="view-ba">
+    <div class="score-bar">Punteggio: <span class="score-num" id="baScore">0</span> / 16</div>
+    <div class="message" id="baMessage"></div>
+    <div class="game-card" id="baBlock"></div>
+    <div class="buttons">
+      <button class="btn btn-check" onclick="baCheck()">Controlla!</button>
+      <button class="btn btn-new" onclick="baNew()">Nuova Partita</button>
+      <button class="btn btn-home" onclick="showHome()">🏠 Menu</button>
+    </div>
+  </div>
+
+  <!-- ===== GAME 9: STORIES ===== -->
+  <div class="view" id="view-story">
+    <div class="score-bar">Punteggio: <span class="score-num" id="storyScore">0</span> / 6</div>
+    <div class="message" id="storyMessage"></div>
+    <div class="game-card" id="storyBlock"></div>
+    <div class="buttons">
+      <button class="btn btn-check" onclick="storyCheck()">Controlla!</button>
+      <button class="btn btn-new" onclick="storyNew()">Nuova Partita</button>
+      <button class="btn btn-home" onclick="showHome()">🏠 Menu</button>
+    </div>
+  </div>
+
+  <!-- ===== GAME 10: GUESS ===== -->
+  <div class="view" id="view-guess">
+    <div class="message" id="guessMessage"></div>
+    <div class="game-card" id="guessBlock"></div>
+    <div class="buttons">
+      <button class="btn btn-new" onclick="guessNew()">Nuovo Numero</button>
+      <button class="btn btn-home" onclick="showHome()">🏠 Menu</button>
+    </div>
+  </div>
+
+  <script>
+    // ===== UTILITIES =====
+    function randomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function uniqueRandoms(count, min, max) {
+      const nums = new Set();
+      while (nums.size < count) nums.add(randomInt(min, max));
+      return [...nums];
+    }
+
+    function pickMessage(correct, total, msgEl) {
+      const pct = correct / total;
+      if (correct === total) {
+        msgEl.innerHTML = '\uD83C\uDF89 BRAVISSIMO! Tutto giusto! \uD83C\uDF89';
+        msgEl.style.color = '#27ae60';
+        launchConfetti();
+      } else if (pct >= 0.75) {
+        msgEl.innerHTML = '\uD83D\uDE0A Quasi perfetto! Riprova quelli sbagliati!';
+        msgEl.style.color = '#2980b9';
+      } else if (pct >= 0.5) {
+        msgEl.innerHTML = '\uD83D\uDCAA Bene! Continua cos\u00EC!';
+        msgEl.style.color = '#e67e22';
+      } else {
+        msgEl.innerHTML = '\uD83E\uDD17 Dai che ce la fai! Riprova!';
+        msgEl.style.color = '#8e44ad';
+      }
+    }
+
+    function launchConfetti() {
+      const emojis = ['\uD83C\uDF1F', '\u2B50', '\uD83C\uDF08', '\uD83C\uDF8A', '\uD83C\uDF89', '\uD83E\uDD73', '\uD83D\uDC96'];
+      for (let i = 0; i < 30; i++) {
+        const span = document.createElement('span');
+        span.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        span.style.cssText = `
+          position: fixed;
+          top: -40px;
+          left: ${Math.random() * 100}vw;
+          font-size: ${1.5 + Math.random() * 1.5}rem;
+          pointer-events: none;
+          z-index: 1000;
+          animation: fall ${2 + Math.random() * 2}s ease-in forwards;
+        `;
+        document.body.appendChild(span);
+        setTimeout(() => span.remove(), 4000);
+      }
+    }
+
+    const fallStyle = document.createElement('style');
+    fallStyle.textContent = `@keyframes fall { to { top: 100vh; transform: rotate(360deg); } }`;
+    document.head.appendChild(fallStyle);
+
+    // ===== VIEW ROUTING =====
+    function showHome() {
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.getElementById('view-home').classList.add('active');
+      document.getElementById('subtitle').textContent = 'Scegli un gioco!';
+    }
+
+    function showGame(name) {
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.getElementById(`view-${name}`).classList.add('active');
+      const setSub = (text, starter) => {
+        document.getElementById('subtitle').textContent = text;
+        starter();
+      };
+      if (name === 'table')   setSub('Completa la tabella!',              tableNew);
+      if (name === 'missing') setSub('Trova il numero mancante!',         missingNew);
+      if (name === 'count')   setSub('Conta gli oggetti!',                countNew);
+      if (name === 'compare') setSub('Più, meno o uguale?',               compareNew);
+      if (name === 'tens')    setSub('Trova tutte le coppie che fanno 10!', tensNew);
+      if (name === 'seq')     setSub('Completa le sequenze di numeri!',   seqNew);
+      if (name === 'eo')      setSub('Pari o dispari?',                    eoNew);
+      if (name === 'ba')      setSub('Quale numero viene prima e dopo?',  baNew);
+      if (name === 'story')   setSub('Leggi il problema e rispondi!',     storyNew);
+      if (name === 'guess')   setSub('Indovina il numero segreto!',       guessNew);
+    }
+
+    // ============================================================
+    // GAME 1: TABLE (+ or -)
+    // ============================================================
+    const TABLE_COLS = 4;
+    const TABLE_ROWS = 5;
+    const TABLE_TOTAL = TABLE_COLS * TABLE_ROWS;
+    let tableColNums = [], tableRowNums = [], tableOp = '+';
+
+    function tableNew() {
+      document.getElementById('tableMessage').innerHTML = '';
+      document.getElementById('tableScore').textContent = '0';
+
+      const isAdd = Math.random() < 0.5;
+      tableOp = isAdd ? '+' : '-';
+
+      if (isAdd) {
+        tableColNums = uniqueRandoms(TABLE_COLS, 0, 10);
+        tableRowNums = uniqueRandoms(TABLE_ROWS, 0, 10);
+      } else {
+        tableColNums = uniqueRandoms(TABLE_COLS, 1, 9);
+        const minRow = Math.max(...tableColNums);
+        tableRowNums = uniqueRandoms(TABLE_ROWS, minRow, 20);
+      }
+
+      const opSymbol = isAdd ? '+' : '\u2212';
+      const opClass = isAdd ? 'op-cell-add' : 'op-cell-sub';
+      const titleClass = isAdd ? 'table-title-add' : 'table-title-sub';
+      const titleText = isAdd ? 'Addizioni' : 'Sottrazioni';
+
+      let html = `<div class="table-title-wrap"><span class="table-title ${titleClass}">${titleText}</span></div><table><tr><td class="op-cell ${opClass}">${opSymbol}</td>`;
+      for (const c of tableColNums) html += `<td class="header-cell">${c}</td>`;
+      html += '</tr>';
+      for (let r = 0; r < TABLE_ROWS; r++) {
+        html += `<tr><td class="row-header">${tableRowNums[r]}</td>`;
+        for (let c = 0; c < TABLE_COLS; c++) {
+          html += `<td class="input-cell" id="tcell-${r}-${c}"><input type="number" class="answer-input" id="tinput-${r}-${c}" autocomplete="off" inputmode="numeric"></td>`;
+        }
+        html += '</tr>';
+      }
+      html += '</table>';
+      document.getElementById('tableBlock').innerHTML = html;
+
+      // Navigation
+      const ids = [];
+      for (let r = 0; r < TABLE_ROWS; r++)
+        for (let c = 0; c < TABLE_COLS; c++) ids.push(`${r}-${c}`);
+      ids.forEach((id, i) => {
+        document.getElementById(`tinput-${id}`).addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            for (let j = i + 1; j < ids.length; j++) {
+              const next = document.getElementById(`tinput-${ids[j]}`);
+              if (!next.disabled) { next.focus(); return; }
+            }
+            tableCheck();
+          }
+        });
+      });
+      document.getElementById('tinput-0-0').focus();
+    }
+
+    function tableCheck() {
+      let correct = 0;
+      for (let r = 0; r < TABLE_ROWS; r++) {
+        for (let c = 0; c < TABLE_COLS; c++) {
+          const input = document.getElementById(`tinput-${r}-${c}`);
+          const cell = document.getElementById(`tcell-${r}-${c}`);
+          const userAnswer = input.value.trim();
+
+          const oldFb = cell.querySelector('.cell-feedback');
+          if (oldFb) oldFb.remove();
+          cell.classList.remove('correct', 'wrong');
+          if (userAnswer === '') continue;
+
+          const expected = tableOp === '+'
+            ? tableRowNums[r] + tableColNums[c]
+            : tableRowNums[r] - tableColNums[c];
+
+          const fb = document.createElement('span');
+          fb.className = 'cell-feedback';
+          if (parseInt(userAnswer) === expected) {
+            correct++;
+            cell.classList.add('correct');
+            fb.textContent = '\u2B50';
+            input.disabled = true;
+          } else {
+            cell.classList.add('wrong');
+            fb.textContent = '\u274C';
+          }
+          cell.appendChild(fb);
+        }
+      }
+      document.getElementById('tableScore').textContent = correct;
+      pickMessage(correct, TABLE_TOTAL, document.getElementById('tableMessage'));
+    }
+
+    // ============================================================
+    // GAME 2: MISSING NUMBER
+    // ============================================================
+    const MISSING_COUNT = 10;
+    let missingProblems = [];
+
+    function missingNew() {
+      document.getElementById('missingMessage').innerHTML = '';
+      document.getElementById('missingScore').textContent = '0';
+      missingProblems = [];
+
+      for (let i = 0; i < MISSING_COUNT; i++) {
+        const isAdd = Math.random() < 0.5;
+        const hidePos = randomInt(0, 1); // 0 = hide first operand, 1 = hide second
+        if (isAdd) {
+          const a = randomInt(0, 10);
+          const b = randomInt(0, 10);
+          missingProblems.push({ op: '+', a, b, result: a + b, hide: hidePos });
+        } else {
+          const a = randomInt(1, 20);
+          const b = randomInt(0, a);
+          missingProblems.push({ op: '-', a, b, result: a - b, hide: hidePos });
+        }
+      }
+
+      let html = '';
+      missingProblems.forEach((p, i) => {
+        const opSym = p.op === '+' ? '+' : '\u2212';
+        const opCls = p.op === '+' ? 'op-plus' : 'op-minus';
+        const inputHtml = `<input type="number" class="missing-input" id="minput-${i}" autocomplete="off" inputmode="numeric">`;
+        const aDisplay = p.hide === 0 ? inputHtml : p.a;
+        const bDisplay = p.hide === 1 ? inputHtml : p.b;
+        html += `<div class="missing-row" id="mrow-${i}">${aDisplay} <span class="${opCls}">${opSym}</span> ${bDisplay} <span>=</span> ${p.result}</div>`;
+      });
+      document.getElementById('missingBlock').innerHTML = html;
+
+      // Navigation
+      for (let i = 0; i < MISSING_COUNT; i++) {
+        document.getElementById(`minput-${i}`).addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            for (let j = i + 1; j < MISSING_COUNT; j++) {
+              const next = document.getElementById(`minput-${j}`);
+              if (!next.disabled) { next.focus(); return; }
+            }
+            missingCheck();
+          }
+        });
+      }
+      document.getElementById('minput-0').focus();
+    }
+
+    function missingCheck() {
+      let correct = 0;
+      missingProblems.forEach((p, i) => {
+        const input = document.getElementById(`minput-${i}`);
+        const row = document.getElementById(`mrow-${i}`);
+        row.classList.remove('correct', 'wrong');
+        const val = input.value.trim();
+        if (val === '') return;
+
+        const expected = p.hide === 0 ? p.a : p.b;
+        if (parseInt(val) === expected) {
+          correct++;
+          row.classList.add('correct');
+          input.disabled = true;
+        } else {
+          row.classList.add('wrong');
+        }
+      });
+      document.getElementById('missingScore').textContent = correct;
+      pickMessage(correct, MISSING_COUNT, document.getElementById('missingMessage'));
+
+      // Focus first unfinished
+      for (let i = 0; i < MISSING_COUNT; i++) {
+        const input = document.getElementById(`minput-${i}`);
+        if (!input.disabled) { input.focus(); break; }
+      }
+    }
+
+    // ============================================================
+    // GAME 3: COUNT EMOJIS
+    // ============================================================
+    const COUNT_ROWS = 8;
+    const COUNT_EMOJIS = ['\uD83C\uDF4E', '\uD83C\uDF4C', '\u2B50', '\uD83D\uDC31', '\uD83D\uDC36', '\uD83C\uDF3C', '\uD83D\uDC1D', '\uD83C\uDF53', '\uD83C\uDF85', '\uD83C\uDF88'];
+    let countAnswers = [];
+
+    function countNew() {
+      document.getElementById('countMessage').innerHTML = '';
+      document.getElementById('countScore').textContent = '0';
+      countAnswers = [];
+
+      let html = '';
+      for (let i = 0; i < COUNT_ROWS; i++) {
+        const n = randomInt(1, 15);
+        const emoji = COUNT_EMOJIS[randomInt(0, COUNT_EMOJIS.length - 1)];
+        countAnswers.push(n);
+        const emojis = emoji.repeat(n);
+        html += `<div class="count-row" id="crow-${i}">
+                   <span class="count-emojis">${emojis}</span>
+                   <span class="count-equals">=</span>
+                   <input type="number" class="count-input" id="cinput-${i}" autocomplete="off" inputmode="numeric">
+                 </div>`;
+      }
+      document.getElementById('countBlock').innerHTML = html;
+
+      for (let i = 0; i < COUNT_ROWS; i++) {
+        document.getElementById(`cinput-${i}`).addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            for (let j = i + 1; j < COUNT_ROWS; j++) {
+              const next = document.getElementById(`cinput-${j}`);
+              if (!next.disabled) { next.focus(); return; }
+            }
+            countCheck();
+          }
+        });
+      }
+      document.getElementById('cinput-0').focus();
+    }
+
+    function countCheck() {
+      let correct = 0;
+      for (let i = 0; i < COUNT_ROWS; i++) {
+        const input = document.getElementById(`cinput-${i}`);
+        const row = document.getElementById(`crow-${i}`);
+        row.classList.remove('correct', 'wrong');
+        const val = input.value.trim();
+        if (val === '') continue;
+
+        if (parseInt(val) === countAnswers[i]) {
+          correct++;
+          row.classList.add('correct');
+          input.disabled = true;
+        } else {
+          row.classList.add('wrong');
+        }
+      }
+      document.getElementById('countScore').textContent = correct;
+      pickMessage(correct, COUNT_ROWS, document.getElementById('countMessage'));
+
+      for (let i = 0; i < COUNT_ROWS; i++) {
+        const input = document.getElementById(`cinput-${i}`);
+        if (!input.disabled) { input.focus(); break; }
+      }
+    }
+
+    // ============================================================
+    // GAME 4: COMPARE
+    // ============================================================
+    const COMPARE_ROWS = 10;
+    let comparePairs = [];
+
+    function compareNew() {
+      document.getElementById('compareMessage').innerHTML = '';
+      document.getElementById('compareScore').textContent = '0';
+      comparePairs = [];
+
+      let html = '';
+      for (let i = 0; i < COMPARE_ROWS; i++) {
+        const a = randomInt(0, 20);
+        // 25% chance of equal numbers
+        const b = Math.random() < 0.25 ? a : randomInt(0, 20);
+        let expected;
+        if (a > b) expected = '>';
+        else if (a < b) expected = '<';
+        else expected = '=';
+        comparePairs.push({ a, b, expected, answered: false });
+
+        html += `<div class="compare-row" id="comprow-${i}">
+                   <span class="compare-num">${a}</span>
+                   <div class="compare-ops">
+                     <button class="compare-btn" data-op="<" onclick="compareAnswer(${i}, '<')">&lt;</button>
+                     <button class="compare-btn" data-op="=" onclick="compareAnswer(${i}, '=')">=</button>
+                     <button class="compare-btn" data-op=">" onclick="compareAnswer(${i}, '>')">&gt;</button>
+                   </div>
+                   <span class="compare-num">${b}</span>
+                 </div>`;
+      }
+      document.getElementById('compareBlock').innerHTML = html;
+    }
+
+    function compareAnswer(i, op) {
+      const pair = comparePairs[i];
+      if (pair.answered) return;
+
+      const row = document.getElementById(`comprow-${i}`);
+      const buttons = row.querySelectorAll('.compare-btn');
+
+      if (op === pair.expected) {
+        pair.answered = true;
+        row.classList.add('correct');
+        buttons.forEach(b => {
+          b.disabled = true;
+          if (b.dataset.op === op) b.classList.add('locked-correct');
+        });
+        // Update score
+        const correct = comparePairs.filter(p => p.answered).length;
+        document.getElementById('compareScore').textContent = correct;
+        if (correct === COMPARE_ROWS) {
+          pickMessage(correct, COMPARE_ROWS, document.getElementById('compareMessage'));
+        }
+      } else {
+        row.classList.add('wrong');
+        buttons.forEach(b => {
+          if (b.dataset.op === op) {
+            b.classList.add('locked-wrong');
+            setTimeout(() => {
+              b.classList.remove('locked-wrong');
+              row.classList.remove('wrong');
+            }, 600);
+          }
+        });
+      }
+    }
+
+    // ============================================================
+    // GAME 5: FRIENDS OF 10
+    // ============================================================
+    const TENS_PAIRS = 6;
+    let tensTiles = [];
+    let tensSelected = null;
+    let tensMatched = 0;
+
+    function shuffleArray(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function tensNew() {
+      document.getElementById('tensMessage').innerHTML = '';
+      document.getElementById('tensScore').textContent = '0';
+      tensSelected = null;
+      tensMatched = 0;
+
+      // Generate 6 pairs that sum to 10 (allowing repeats of pair values)
+      tensTiles = [];
+      for (let i = 0; i < TENS_PAIRS; i++) {
+        const a = randomInt(0, 10);
+        tensTiles.push(a, 10 - a);
+      }
+      shuffleArray(tensTiles);
+
+      let html = '<div class="tens-grid">';
+      tensTiles.forEach((n, i) => {
+        html += `<div class="tens-tile" id="tens-${i}" onclick="tensClick(${i})">${n}</div>`;
+      });
+      html += '</div>';
+      document.getElementById('tensBlock').innerHTML = html;
+    }
+
+    function tensClick(i) {
+      const tile = document.getElementById(`tens-${i}`);
+      if (tile.classList.contains('matched')) return;
+      if (tensSelected === i) {
+        // Deselect
+        tile.classList.remove('selected');
+        tensSelected = null;
+        return;
+      }
+
+      if (tensSelected === null) {
+        tile.classList.add('selected');
+        tensSelected = i;
+        return;
+      }
+
+      // Second selection
+      const firstIdx = tensSelected;
+      const firstTile = document.getElementById(`tens-${firstIdx}`);
+      const sum = tensTiles[firstIdx] + tensTiles[i];
+      tensSelected = null;
+
+      if (sum === 10) {
+        firstTile.classList.remove('selected');
+        firstTile.classList.add('matched');
+        tile.classList.add('matched');
+        tensMatched++;
+        document.getElementById('tensScore').textContent = tensMatched;
+        if (tensMatched === TENS_PAIRS) {
+          pickMessage(tensMatched, TENS_PAIRS, document.getElementById('tensMessage'));
+        }
+      } else {
+        firstTile.classList.remove('selected');
+        firstTile.classList.add('wrong-flash');
+        tile.classList.add('wrong-flash');
+        setTimeout(() => {
+          firstTile.classList.remove('wrong-flash');
+          tile.classList.remove('wrong-flash');
+        }, 500);
+      }
+    }
+
+    // ============================================================
+    // GAME 6: SEQUENCES
+    // ============================================================
+    const SEQ_ROWS = 8;
+    const SEQ_LEN = 5;
+    let seqData = []; // each: { nums: [...], hidden: [indices] }
+
+    function seqNew() {
+      document.getElementById('seqMessage').innerHTML = '';
+      document.getElementById('seqScore').textContent = '0';
+      seqData = [];
+
+      for (let r = 0; r < SEQ_ROWS; r++) {
+        // Step: +1, +2, -1, -2
+        const steps = [1, 2, -1, -2];
+        const step = steps[randomInt(0, 3)];
+        // Start: ensure all numbers stay in 0-25
+        let start;
+        if (step > 0) {
+          start = randomInt(0, 20 - step * (SEQ_LEN - 1));
+        } else {
+          start = randomInt(-step * (SEQ_LEN - 1), 25);
+        }
+        const nums = [];
+        for (let i = 0; i < SEQ_LEN; i++) nums.push(start + step * i);
+        // Hide 1 or 2 positions
+        const hideCount = randomInt(1, 2);
+        const hidden = [];
+        while (hidden.length < hideCount) {
+          const idx = randomInt(0, SEQ_LEN - 1);
+          if (!hidden.includes(idx)) hidden.push(idx);
+        }
+        seqData.push({ nums, hidden });
+      }
+
+      let html = '';
+      seqData.forEach((s, r) => {
+        html += `<div class="seq-row" id="srow-${r}">`;
+        s.nums.forEach((n, i) => {
+          if (i > 0) html += '<span class="seq-arrow">→</span>';
+          if (s.hidden.includes(i)) {
+            html += `<input type="number" class="seq-input" id="sinput-${r}-${i}" autocomplete="off" inputmode="numeric">`;
+          } else {
+            html += `<span class="seq-num">${n}</span>`;
+          }
+        });
+        html += '</div>';
+      });
+      document.getElementById('seqBlock').innerHTML = html;
+
+      // Collect input ids for navigation
+      const inputIds = [];
+      seqData.forEach((s, r) => {
+        s.hidden.forEach(i => inputIds.push(`${r}-${i}`));
+      });
+      inputIds.forEach((id, idx) => {
+        document.getElementById(`sinput-${id}`).addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            for (let j = idx + 1; j < inputIds.length; j++) {
+              const next = document.getElementById(`sinput-${inputIds[j]}`);
+              if (!next.disabled) { next.focus(); return; }
+            }
+            seqCheck();
+          }
+        });
+      });
+      if (inputIds.length > 0) document.getElementById(`sinput-${inputIds[0]}`).focus();
+    }
+
+    function seqCheck() {
+      let correctRows = 0;
+      seqData.forEach((s, r) => {
+        const row = document.getElementById(`srow-${r}`);
+        row.classList.remove('correct', 'wrong');
+        let allOk = true;
+        let anyFilled = false;
+        s.hidden.forEach(i => {
+          const input = document.getElementById(`sinput-${r}-${i}`);
+          const val = input.value.trim();
+          if (val === '') { allOk = false; return; }
+          anyFilled = true;
+          if (parseInt(val) === s.nums[i]) {
+            input.disabled = true;
+          } else {
+            allOk = false;
+          }
+        });
+        if (!anyFilled) return;
+        if (allOk) {
+          correctRows++;
+          row.classList.add('correct');
+        } else {
+          row.classList.add('wrong');
+        }
+      });
+      document.getElementById('seqScore').textContent = correctRows;
+      pickMessage(correctRows, SEQ_ROWS, document.getElementById('seqMessage'));
+    }
+
+    // ============================================================
+    // GAME 7: EVEN / ODD
+    // ============================================================
+    const EO_COUNT = 10;
+    let eoNums = [];
+    let eoScore = 0;
+
+    function eoNew() {
+      document.getElementById('eoMessage').innerHTML = '';
+      document.getElementById('eoScore').textContent = '0';
+      eoScore = 0;
+      eoNums = [];
+      for (let i = 0; i < EO_COUNT; i++) eoNums.push(randomInt(0, 20));
+
+      let html = '';
+      eoNums.forEach((n, i) => {
+        html += `<div class="eo-row" id="eorow-${i}">
+                   <span class="eo-num">${n}</span>
+                   <button class="eo-btn" data-v="pari" onclick="eoAnswer(${i}, 'pari')">Pari</button>
+                   <button class="eo-btn" data-v="dispari" onclick="eoAnswer(${i}, 'dispari')">Dispari</button>
+                 </div>`;
+      });
+      document.getElementById('eoBlock').innerHTML = html;
+    }
+
+    function eoAnswer(i, choice) {
+      const row = document.getElementById(`eorow-${i}`);
+      if (row.classList.contains('correct')) return;
+
+      const isEven = eoNums[i] % 2 === 0;
+      const expected = isEven ? 'pari' : 'dispari';
+      const buttons = row.querySelectorAll('.eo-btn');
+
+      if (choice === expected) {
+        row.classList.add('correct');
+        row.classList.remove('wrong');
+        buttons.forEach(b => {
+          b.disabled = true;
+          if (b.dataset.v === choice) b.classList.add('locked-correct');
+        });
+        eoScore++;
+        document.getElementById('eoScore').textContent = eoScore;
+        if (eoScore === EO_COUNT) {
+          pickMessage(eoScore, EO_COUNT, document.getElementById('eoMessage'));
+        }
+      } else {
+        row.classList.add('wrong');
+        buttons.forEach(b => {
+          if (b.dataset.v === choice) {
+            b.classList.add('locked-wrong');
+            setTimeout(() => {
+              b.classList.remove('locked-wrong');
+              row.classList.remove('wrong');
+            }, 600);
+          }
+        });
+      }
+    }
+
+    // ============================================================
+    // GAME 8: BEFORE / AFTER
+    // ============================================================
+    const BA_ROWS = 8;
+    let baNums = [];
+
+    function baNew() {
+      document.getElementById('baMessage').innerHTML = '';
+      document.getElementById('baScore').textContent = '0';
+      baNums = [];
+      for (let i = 0; i < BA_ROWS; i++) baNums.push(randomInt(1, 19));
+
+      let html = '';
+      baNums.forEach((n, i) => {
+        html += `<div class="ba-row" id="barow-${i}">
+                   <input type="number" class="ba-input" id="bainput-${i}-0" autocomplete="off" inputmode="numeric">
+                   <span class="ba-arrow">→</span>
+                   <span class="ba-num">${n}</span>
+                   <span class="ba-arrow">→</span>
+                   <input type="number" class="ba-input" id="bainput-${i}-1" autocomplete="off" inputmode="numeric">
+                 </div>`;
+      });
+      document.getElementById('baBlock').innerHTML = html;
+
+      // Navigation
+      const ids = [];
+      for (let i = 0; i < BA_ROWS; i++) { ids.push(`${i}-0`); ids.push(`${i}-1`); }
+      ids.forEach((id, idx) => {
+        document.getElementById(`bainput-${id}`).addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            for (let j = idx + 1; j < ids.length; j++) {
+              const next = document.getElementById(`bainput-${ids[j]}`);
+              if (!next.disabled) { next.focus(); return; }
+            }
+            baCheck();
+          }
+        });
+      });
+      document.getElementById('bainput-0-0').focus();
+    }
+
+    function baCheck() {
+      let correct = 0;
+      baNums.forEach((n, i) => {
+        const row = document.getElementById(`barow-${i}`);
+        row.classList.remove('correct', 'wrong');
+        const beforeInput = document.getElementById(`bainput-${i}-0`);
+        const afterInput = document.getElementById(`bainput-${i}-1`);
+        const beforeVal = beforeInput.value.trim();
+        const afterVal = afterInput.value.trim();
+
+        let rowCorrect = true;
+        let anyFilled = false;
+
+        if (beforeVal !== '') {
+          anyFilled = true;
+          if (parseInt(beforeVal) === n - 1) {
+            correct++;
+            beforeInput.disabled = true;
+          } else {
+            rowCorrect = false;
+          }
+        } else {
+          rowCorrect = false;
+        }
+
+        if (afterVal !== '') {
+          anyFilled = true;
+          if (parseInt(afterVal) === n + 1) {
+            correct++;
+            afterInput.disabled = true;
+          } else {
+            rowCorrect = false;
+          }
+        } else {
+          rowCorrect = false;
+        }
+
+        if (anyFilled) {
+          if (rowCorrect) row.classList.add('correct');
+          else row.classList.add('wrong');
+        }
+      });
+      document.getElementById('baScore').textContent = correct;
+      pickMessage(correct, BA_ROWS * 2, document.getElementById('baMessage'));
+    }
+
+    // ============================================================
+    // GAME 9: WORD PROBLEMS
+    // ============================================================
+    const STORY_COUNT = 6;
+    const STORY_TEMPLATES = [
+      { op: '+', text: (a, b) => `\uD83D\uDC31 Il gatto Micio ha ${a} palline. Ne trova altre ${b}. Quante palline ha in tutto?` },
+      { op: '+', text: (a, b) => `\uD83C\uDF4E Sofia raccoglie ${a} mele dall'albero. Poi ne raccoglie altre ${b}. Quante mele ha adesso?` },
+      { op: '+', text: (a, b) => `\uD83D\uDC1D Nell'alveare ci sono ${a} api. Ne arrivano altre ${b}. Quante api ci sono in totale?` },
+      { op: '+', text: (a, b) => `\u2B50 Luca ha ${a} figurine. Il nonno gliene regala ${b}. Quante figurine ha ora?` },
+      { op: '+', text: (a, b) => `\uD83C\uDF88 Alla festa ci sono ${a} palloncini rossi e ${b} palloncini blu. Quanti palloncini ci sono in tutto?` },
+      { op: '-', text: (a, b) => `\uD83C\uDF6C Marco ha ${a} caramelle. Ne mangia ${b}. Quante caramelle gli restano?` },
+      { op: '-', text: (a, b) => `\uD83D\uDC26 Sull'albero ci sono ${a} uccellini. ${b} volano via. Quanti uccellini restano sull'albero?` },
+      { op: '-', text: (a, b) => `\uD83C\uDF3C Anna ha ${a} fiori. Ne regala ${b} alla maestra. Quanti fiori le rimangono?` },
+      { op: '-', text: (a, b) => `\uD83C\uDF6A In un sacchetto ci sono ${a} biscotti. Giulia ne prende ${b}. Quanti biscotti ci sono ancora nel sacchetto?` },
+      { op: '-', text: (a, b) => `\uD83D\uDC20 Nell'acquario ci sono ${a} pesci. Ne vendono ${b}. Quanti pesci restano?` }
+    ];
+    let storyProblems = [];
+
+    function storyNew() {
+      document.getElementById('storyMessage').innerHTML = '';
+      document.getElementById('storyScore').textContent = '0';
+      storyProblems = [];
+
+      // Pick 6 random distinct templates
+      const shuffled = shuffleArray([...STORY_TEMPLATES]);
+      for (let i = 0; i < STORY_COUNT; i++) {
+        const tpl = shuffled[i];
+        let a, b;
+        if (tpl.op === '+') {
+          a = randomInt(1, 10);
+          b = randomInt(1, 10);
+          if (a + b > 20) b = 20 - a;
+        } else {
+          a = randomInt(3, 15);
+          b = randomInt(1, a);
+        }
+        const result = tpl.op === '+' ? a + b : a - b;
+        storyProblems.push({ text: tpl.text(a, b), result });
+      }
+
+      let html = '';
+      storyProblems.forEach((p, i) => {
+        html += `<div class="story-row" id="strow-${i}">
+                   <div class="story-text">${p.text}</div>
+                   <div class="story-answer">
+                     <span class="story-label">Risposta:</span>
+                     <input type="number" class="story-input" id="stinput-${i}" autocomplete="off" inputmode="numeric">
+                   </div>
+                 </div>`;
+      });
+      document.getElementById('storyBlock').innerHTML = html;
+
+      for (let i = 0; i < STORY_COUNT; i++) {
+        document.getElementById(`stinput-${i}`).addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            for (let j = i + 1; j < STORY_COUNT; j++) {
+              const next = document.getElementById(`stinput-${j}`);
+              if (!next.disabled) { next.focus(); return; }
+            }
+            storyCheck();
+          }
+        });
+      }
+      document.getElementById('stinput-0').focus();
+    }
+
+    function storyCheck() {
+      let correct = 0;
+      storyProblems.forEach((p, i) => {
+        const input = document.getElementById(`stinput-${i}`);
+        const row = document.getElementById(`strow-${i}`);
+        row.classList.remove('correct', 'wrong');
+        const val = input.value.trim();
+        if (val === '') return;
+
+        if (parseInt(val) === p.result) {
+          correct++;
+          row.classList.add('correct');
+          input.disabled = true;
+        } else {
+          row.classList.add('wrong');
+        }
+      });
+      document.getElementById('storyScore').textContent = correct;
+      pickMessage(correct, STORY_COUNT, document.getElementById('storyMessage'));
+    }
+
+    // ============================================================
+    // GAME 10: GUESS THE NUMBER
+    // ============================================================
+    let guessTarget = 0;
+    let guessAttempts = 0;
+    let guessHistory = [];
+    let guessFound = false;
+
+    function guessNew() {
+      guessTarget = randomInt(1, 20);
+      guessAttempts = 0;
+      guessHistory = [];
+      guessFound = false;
+      document.getElementById('guessMessage').innerHTML = '';
+      renderGuess();
+      setTimeout(() => {
+        const inp = document.getElementById('guessInput');
+        if (inp) inp.focus();
+      }, 0);
+    }
+
+    function renderGuess() {
+      const hintClass = guessFound ? '' : '';
+      let hint = '';
+      if (guessHistory.length > 0 && !guessFound) {
+        const last = guessHistory[guessHistory.length - 1];
+        if (last.value < guessTarget) hint = '\u2B06\uFE0F Più grande!';
+        else if (last.value > guessTarget) hint = '\u2B07\uFE0F Più piccolo!';
+      }
+      if (guessFound) hint = `\uD83C\uDF89 Trovato in ${guessAttempts} tentativi!`;
+
+      let chips = '';
+      guessHistory.forEach(h => {
+        let cls = 'guess-chip';
+        if (h.value === guessTarget) cls += ' found';
+        else if (h.value < guessTarget) cls += ' lower';
+        else cls += ' higher';
+        chips += `<span class="${cls}">${h.value}</span>`;
+      });
+
+      const html = `
+        <div class="guess-card">
+          <div class="guess-title">Penso a un numero da <strong>1 a 20</strong>...</div>
+          <div class="guess-attempts">Tentativi: <strong>${guessAttempts}</strong></div>
+          <div class="guess-hint" style="color: ${guessFound ? '#27ae60' : '#e67e22'};">${hint}</div>
+          ${guessFound ? '' : `
+            <div class="guess-input-row">
+              <input type="number" class="guess-input" id="guessInput" min="1" max="20" autocomplete="off" inputmode="numeric">
+              <button class="btn btn-check" onclick="guessSubmit()">Indovina!</button>
+            </div>
+          `}
+          <div class="guess-history">${chips}</div>
+        </div>
+      `;
+      document.getElementById('guessBlock').innerHTML = html;
+
+      if (!guessFound) {
+        const inp = document.getElementById('guessInput');
+        inp.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') { e.preventDefault(); guessSubmit(); }
+        });
+      }
+    }
+
+    function guessSubmit() {
+      const inp = document.getElementById('guessInput');
+      const val = parseInt(inp.value);
+      if (isNaN(val) || val < 1 || val > 20) {
+        inp.value = '';
+        inp.focus();
+        return;
+      }
+      guessAttempts++;
+      guessHistory.push({ value: val });
+      if (val === guessTarget) {
+        guessFound = true;
+        pickMessage(1, 1, document.getElementById('guessMessage'));
+      }
+      renderGuess();
+    }
+
+    // ===== INITIAL =====
+    showHome();
+  </script>
+</body>
+</html>

@@ -1,30 +1,28 @@
-# Matematica Divertente!
+# Fun Math!
 
-Raccolta di 10 mini-giochi matematici per bambini della 1a elementare, in HTML/CSS/JS puro, senza dipendenze.
+A collection of 10 math games for first grade children, built with plain HTML, CSS, and JavaScript. No dependencies are required.
 
-## Giochi inclusi
+## Games
 
-1. **Tabella +/−** — Tavola incrociata 5x4, addizioni o sottrazioni random
-2. **Numero Mancante** — Operazioni con un operando nascosto (`5 + ? = 8`)
-3. **Conta e Scrivi** — Conta gli oggetti (emoji) e scrivi il numero
-4. **Più, Meno o Uguale?** — Confronto tra due numeri
-5. **Amici del 10** — Trova le coppie che sommano 10
-6. **Sequenze** — Completa serie numeriche crescenti o decrescenti
-7. **Pari o Dispari?** — Classifica numeri come pari o dispari
-8. **Prima e Dopo** — Scrivi predecessore e successore
-9. **Problemi** — Piccoli problemi con storie illustrate
-10. **Indovina il Numero** — Gioco di deduzione 1-20
+1. **Addition/Subtraction Table** — Fill in a 5 × 4 table.
+2. **Missing Number** — Find the hidden operand (`5 + ? = 8`).
+3. **Count and Write** — Count the objects and write the number.
+4. **Greater, Less, or Equal?** — Compare two numbers.
+5. **Number Friends** — Find pairs that add up to a random number from 3 to 10. Each new game picks a new target.
+6. **Sequences** — Complete ascending or descending number sequences.
+7. **Even or Odd?** — Classify numbers as even or odd.
+8. **Before and After** — Write the previous and next number.
+9. **Story Problems** — Solve short illustrated problems.
+10. **Guess the Number** — Deduce a number from 1 to 20.
 
-## Come giocare
+## Play
 
-Apri `index.html` in un browser — non serve nulla altro.
+Open `index.html` in a browser. You can also play the [online version](https://sbaia.github.io/math-game/).
 
-In alternativa, la versione online: <https://sbaia.github.io/math-game/>
+## Features
 
-## Caratteristiche
-
-- Grafica colorata pensata per bambini (Comic Sans, gradient, emoji, confetti)
-- Feedback immediato con stelle e X
-- Navigazione da tastiera con Enter
-- Responsive (funziona su tablet e telefono)
-- Zero dipendenze: un singolo file HTML
+- Colorful design for children, with emoji and confetti.
+- Immediate feedback with stars and crosses.
+- Enter key navigation.
+- Responsive layout for tablets and phones.
+- No dependencies: one HTML file.

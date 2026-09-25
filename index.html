@@ -372,7 +372,7 @@
     .compare-btn:disabled { cursor: default; }
     .compare-btn:disabled:hover { transform: none; }
 
-    /* ===== GAME 5: FRIENDS OF 10 ===== */
+    /* ===== GAME 5: NUMBER FRIENDS ===== */
     .tens-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -712,8 +712,8 @@
       </div>
       <div class="menu-card c1" onclick="showGame('tens')">
         <span class="menu-icon">👫</span>
-        <div class="menu-title">Amici del 10</div>
-        <div class="menu-desc">Trova le coppie che fanno 10</div>
+        <div class="menu-title">Amici dei numeri</div>
+        <div class="menu-desc">Un numero a sorpresa da 3 a 10</div>
       </div>
       <div class="menu-card c2" onclick="showGame('seq')">
         <span class="menu-icon">🔢</span>
@@ -790,7 +790,7 @@
     </div>
   </div>
 
-  <!-- ===== GAME 5: FRIENDS OF 10 ===== -->
+  <!-- ===== GAME 5: NUMBER FRIENDS ===== -->
   <div class="view" id="view-tens">
     <div class="score-bar">Coppie trovate: <span class="score-num" id="tensScore">0</span> / 6</div>
     <div class="message" id="tensMessage"></div>
@@ -929,7 +929,7 @@
       if (name === 'missing') setSub('Trova il numero mancante!',         missingNew);
       if (name === 'count')   setSub('Conta gli oggetti!',                countNew);
       if (name === 'compare') setSub('Più, meno o uguale?',               compareNew);
-      if (name === 'tens')    setSub('Trova tutte le coppie che fanno 10!', tensNew);
+      if (name === 'tens')    tensNew();
       if (name === 'seq')     setSub('Completa le sequenze di numeri!',   seqNew);
       if (name === 'eo')      setSub('Pari o dispari?',                    eoNew);
       if (name === 'ba')      setSub('Quale numero viene prima e dopo?',  baNew);
@@ -1250,12 +1250,13 @@
     }
 
     // ============================================================
-    // GAME 5: FRIENDS OF 10
+    // GAME 5: NUMBER FRIENDS
     // ============================================================
     const TENS_PAIRS = 6;
     let tensTiles = [];
     let tensSelected = null;
     let tensMatched = 0;
+    let tensTarget = 10;
 
     function shuffleArray(arr) {
       for (let i = arr.length - 1; i > 0; i--) {
@@ -1270,12 +1271,14 @@
       document.getElementById('tensScore').textContent = '0';
       tensSelected = null;
       tensMatched = 0;
+      tensTarget = randomInt(3, 10);
+      document.getElementById('subtitle').textContent = `Trova tutte le coppie che fanno ${tensTarget}!`;
 
-      // Generate 6 pairs that sum to 10 (allowing repeats of pair values)
+      // Generate six pairs for this game's target; repeated values are allowed.
       tensTiles = [];
       for (let i = 0; i < TENS_PAIRS; i++) {
-        const a = randomInt(0, 10);
-        tensTiles.push(a, 10 - a);
+        const a = randomInt(0, tensTarget);
+        tensTiles.push(a, tensTarget - a);
       }
       shuffleArray(tensTiles);
 
@@ -1309,7 +1312,7 @@
       const sum = tensTiles[firstIdx] + tensTiles[i];
       tensSelected = null;
 
-      if (sum === 10) {
+      if (sum === tensTarget) {
         firstTile.classList.remove('selected');
         firstTile.classList.add('matched');
         tile.classList.add('matched');

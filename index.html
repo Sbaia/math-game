@@ -410,6 +410,47 @@
       border-color: #c0392b;
     }
 
+    /* ===== GAME 5B: NUMBER FRIENDS LIST ===== */
+    .friends-list { max-width: 300px; margin: 0 auto; }
+    .friends-target {
+      background: #d5f5e3;
+      border-radius: 16px;
+      color: #227547;
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin: 0 auto 16px;
+      max-width: 300px;
+      padding: 10px;
+      text-align: center;
+    }
+    .friends-row {
+      display: grid;
+      grid-template-columns: 66px 40px 66px;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      background: #fff;
+      border: 3px solid #e0e0e0;
+      border-radius: 14px;
+      padding: 8px;
+      margin-bottom: 8px;
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    .friends-number {
+      background: #eaf4ff;
+      border: 3px solid #a9d3f5;
+      border-radius: 12px;
+      display: grid;
+      height: 42px;
+      place-items: center;
+    }
+    .friends-hand { font-size: 1.7rem; }
+    .friends-row.correct { border-color: #2ecc71; background: #eafaf1; }
+    .friends-row.wrong { border-color: #e74c3c; background: #fdf2f2; }
+    .friends-input { width: 66px; height: 42px; font-size: 1.5rem; }
+
     /* ===== GAME 6: SEQUENCES ===== */
     .seq-row {
       display: flex;
@@ -715,6 +756,11 @@
         <div class="menu-title">Amici dei numeri</div>
         <div class="menu-desc">Un numero a sorpresa da 3 a 10</div>
       </div>
+      <div class="menu-card c2" onclick="showGame('friends')">
+        <span class="menu-icon">✏️</span>
+        <div class="menu-title">Completa gli amici</div>
+        <div class="menu-desc">Scrivi il numero che manca</div>
+      </div>
       <div class="menu-card c2" onclick="showGame('seq')">
         <span class="menu-icon">🔢</span>
         <div class="menu-title">Sequenze</div>
@@ -797,6 +843,18 @@
     <div class="game-card" id="tensBlock"></div>
     <div class="buttons">
       <button class="btn btn-new" onclick="tensNew()">Nuova Partita</button>
+      <button class="btn btn-home" onclick="showHome()">🏠 Menu</button>
+    </div>
+  </div>
+
+  <!-- ===== GAME 5B: NUMBER FRIENDS LIST ===== -->
+  <div class="view" id="view-friends">
+    <div class="score-bar">Risposte corrette: <span class="score-num" id="friendsScore">0</span> / <span id="friendsTotal">0</span></div>
+    <div class="message" id="friendsMessage"></div>
+    <div class="game-card" id="friendsBlock"></div>
+    <div class="buttons">
+      <button class="btn btn-check" onclick="friendsCheck()">Controlla!</button>
+      <button class="btn btn-new" onclick="friendsNew()">Nuova Partita</button>
       <button class="btn btn-home" onclick="showHome()">🏠 Menu</button>
     </div>
   </div>
@@ -930,6 +988,7 @@
       if (name === 'count')   setSub('Conta gli oggetti!',                countNew);
       if (name === 'compare') setSub('Più, meno o uguale?',               compareNew);
       if (name === 'tens')    tensNew();
+      if (name === 'friends') friendsNew();
       if (name === 'seq')     setSub('Completa le sequenze di numeri!',   seqNew);
       if (name === 'eo')      setSub('Pari o dispari?',                    eoNew);
       if (name === 'ba')      setSub('Quale numero viene prima e dopo?',  baNew);
@@ -1330,6 +1389,61 @@
           tile.classList.remove('wrong-flash');
         }, 500);
       }
+    }
+
+    // ============================================================
+    // GAME 5B: NUMBER FRIENDS LIST
+    // ============================================================
+    let friendsTarget = 0;
+
+    function friendsNew() {
+      friendsTarget = randomInt(3, 10);
+      document.getElementById('subtitle').textContent = 'Trova il numero amico!';
+      document.getElementById('friendsScore').textContent = '0';
+      document.getElementById('friendsTotal').textContent = friendsTarget + 1;
+      document.getElementById('friendsMessage').innerHTML = '';
+
+      const numbers = shuffleArray(Array.from({ length: friendsTarget + 1 }, (_, n) => n));
+      let html = `<div class="friends-target">Amici del <strong>${friendsTarget}</strong></div><div class="friends-list">`;
+      for (const n of numbers) {
+        html += `<div class="friends-row" id="friendsRow-${n}"><span class="friends-number">${n}</span>
+                   <span class="friends-hand" aria-hidden="true">🤝</span>
+                   <input type="number" class="missing-input friends-input" id="friendsInput-${n}" min="0" max="${friendsTarget}" autocomplete="off" inputmode="numeric" aria-label="Amico di ${n} per arrivare a ${friendsTarget}"></div>`;
+      }
+      html += '</div>';
+      document.getElementById('friendsBlock').innerHTML = html;
+
+      numbers.forEach((n, index) => {
+        document.getElementById(`friendsInput-${n}`).addEventListener('keydown', (e) => {
+          if (e.key !== 'Enter') return;
+          e.preventDefault();
+          for (let next = index + 1; next < numbers.length; next++) {
+            const input = document.getElementById(`friendsInput-${numbers[next]}`);
+            if (!input.disabled) { input.focus(); return; }
+          }
+          friendsCheck();
+        });
+      });
+      document.getElementById(`friendsInput-${numbers[0]}`).focus();
+    }
+
+    function friendsCheck() {
+      let correct = 0;
+      for (let n = 0; n <= friendsTarget; n++) {
+        const input = document.getElementById(`friendsInput-${n}`);
+        const row = document.getElementById(`friendsRow-${n}`);
+        row.classList.remove('correct', 'wrong');
+        if (input.value.trim() === '') continue;
+        if (Number(input.value) === friendsTarget - n) {
+          correct++;
+          row.classList.add('correct');
+          input.disabled = true;
+        } else {
+          row.classList.add('wrong');
+        }
+      }
+      document.getElementById('friendsScore').textContent = correct;
+      pickMessage(correct, friendsTarget + 1, document.getElementById('friendsMessage'));
     }
 
     // ============================================================

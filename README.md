@@ -1,6 +1,6 @@
 # Fun Math!
 
-A collection of 10 math games for first grade children, built with plain HTML, CSS, and JavaScript. No dependencies are required.
+A collection of 11 math games for first grade children, built with plain HTML, CSS, and JavaScript. No dependencies are required.
 
 ## Games
 
@@ -9,11 +9,12 @@ A collection of 10 math games for first grade children, built with plain HTML, C
 3. **Count and Write** — Count the objects and write the number.
 4. **Greater, Less, or Equal?** — Compare two numbers.
 5. **Number Friends** — Find pairs that add up to a random number from 3 to 10. Each new game picks a new target.
-6. **Sequences** — Complete ascending or descending number sequences.
-7. **Even or Odd?** — Classify numbers as even or odd.
-8. **Before and After** — Write the previous and next number.
-9. **Story Problems** — Solve short illustrated problems.
-10. **Guess the Number** — Deduce a number from 1 to 20.
+6. **Complete Number Friends** — Fill in matching numbers for a random target from 3 to 10, with rows in random order.
+7. **Sequences** — Complete ascending or descending number sequences.
+8. **Even or Odd?** — Classify numbers as even or odd.
+9. **Before and After** — Write the previous and next number.
+10. **Story Problems** — Solve short illustrated problems.
+11. **Guess the Number** — Deduce a number from 1 to 20.
 
 ## Play
 

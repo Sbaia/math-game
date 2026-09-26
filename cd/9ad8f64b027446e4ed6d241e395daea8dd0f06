@@ -1,0 +1,36 @@
+index.html
+  s_7a1c6689f16a4b::t_b240685889eccc 414-425,428,431,440-447,449,1407,1409-1411
+  s_7a1c6689f16a4b::t_1e76698df24fd3 1401
+  s_7a1c6689f16a4b::t_dd3931caacac3a 1406,1408,1416,1420-1421,1426-1427
+  s_7a1c6689f16a4b::t_675a8fb736dc38 413,426-427,429-430,432-439,448,450-453,759-763,850-861,991,1394-1400,1402-1405,1412-1415,1417-1419,1422-1425,1428-1447
+  s_7a1c6689f16a4b::t_754a124e594559 1448
+friends.test.js
+  s_7a1c6689f16a4b::t_2b707b236baf49 82
+  s_7a1c6689f16a4b::t_80e20641010bb7 12,37,51-55,96-99,101-108
+  s_7a1c6689f16a4b::t_d09daf0bc9f360 75,89,91
+  s_7a1c6689f16a4b::t_8253b3e65e3ad6 19-20,76-78,80,84,92,109-112,114-131,133
+  s_7a1c6689f16a4b::t_f82cfcbb3180e1 79,132
+  s_7a1c6689f16a4b::t_f02fc80501b0bf 9,11,22-24,85-87,93-95,100
+  s_7a1c6689f16a4b::t_0ba636bcf22a5a 73,81,83,88,90
+  s_7a1c6689f16a4b::t_a88057dc2f1aad 74,113
+  s_7a1c6689f16a4b::t_3709687474c90e 134
+README.md
+  s_7a1c6689f16a4b::t_98fbc8ff2fd069 3,13-17
+  s_7a1c6689f16a4b::t_eefe7d528d20f0 12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "cd9ad8f64b027446e4ed6d241e395daea8dd0f06",
+  "prompts": {},
+  "sessions": {
+    "s_7a1c6689f16a4b": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0d95d-5a1b-7fe3-99d2-e75fb54df9a2",
+        "model": "gpt-6-sol"
+      },
+      "human_author": "Roberto Serafin <roberto.serafin@lansweeper.com>"
+    }
+  }
+}

@@ -30,10 +30,18 @@ Open `index.html` in a browser. You can also play the [online version](https://s
 
 ## School subjects and English
 
-The start page offers math, English, and Italian (coming soon). English activities use uppercase text and Italian instructions. Choose colors, school objects, animals, or toys, then explore, recognize pictures, play memory, solve clues, complete words, listen and touch, or arrange letters.
+The start page offers math, English, and Italian. English activities use uppercase text and Italian instructions. Choose colors, school objects, animals, or toys, then explore, recognize pictures, play memory, solve clues, complete words, listen and touch, or arrange letters.
 
 Routes use English hashbang paths, for example `#!/math/friends` and `#!/english/animals/listen`. Reload and browser history preserve the selected activity. A new visit to an activity starts a new round.
 
 Speech uses an English voice from the browser, with British English preferred. Voice availability and quality depend on the device. Some voices require a connection. The game reports unavailable audio instead of using an Italian voice.
 
 For a local check, open `index.html` in a browser. Run automated checks with `node --test friends.test.js navigation.test.js english/*.test.js`.
+
+## Italian spelling
+
+Italian activities cover difficult sounds (CHE/CHI, GHE/GHI, GN, GLI, SCE/SCI), double consonants, and written accents. Choose COMPLETA, SCEGLI LA PAROLA, or DETTATO. PROVA mixes the categories. Dictation uses whole words, replay, and accented vowel buttons; written accents are checked.
+
+Italian routes include `#!/italian/sounds/complete` and `#!/italian/accents/dictation`. Audio requires an Italian device voice; unavailable voices produce a visible message. Human listening on the target device remains part of pronunciation validation.
+
+Run all checks with `node --test friends.test.js navigation.test.js english/*.test.js italian/*.test.js`.

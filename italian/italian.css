@@ -1,0 +1,12 @@
+.italian-game { max-width: 760px; margin: 0 auto; padding: 1.2rem; text-align: center; }
+.italian-game h2 { font-size: clamp(1.4rem, 5vw, 2.1rem); }
+.italian-clue { font-size: 1.2rem; line-height: 1.6; }
+.italian-choices, .italian-actions, .italian-accents { display: flex; flex-wrap: wrap; justify-content: center; gap: .8rem; margin: 1rem 0; }
+.italian-game button { min-height: 52px; padding: .8rem 1.2rem; border: 2px solid #5c49b8; border-radius: 16px; background: #fff; color: #30225d; font: inherit; font-weight: 700; cursor: pointer; }
+.italian-game button:hover { background: #eee8ff; }
+.italian-game button:focus-visible, .italian-game input:focus-visible { outline: 4px solid #ef9b16; outline-offset: 3px; }
+.italian-masked { flex-basis: 100%; font-size: 2rem; font-weight: bold; letter-spacing: .1em; }
+.italian-game form { flex-basis: 100%; }
+.italian-game input { box-sizing: border-box; width: min(100%, 420px); min-height: 56px; border: 2px solid #5c49b8; border-radius: 12px; padding: .6rem; font: inherit; font-size: 1.5rem; text-align: center; text-transform: uppercase; }
+.italian-game [role=status] { min-height: 1.6em; line-height: 1.5; }
+@media (prefers-reduced-motion: reduce) { .italian-game * { animation: none; transition: none; } }

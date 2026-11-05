@@ -1,6 +1,6 @@
-# Fun Math!
+# Learn and Play!
 
-A collection of 11 math games for first grade children, built with plain HTML, CSS, and JavaScript. No dependencies are required.
+Math games and English vocabulary activities for primary school children, built with plain HTML, CSS, and JavaScript. No dependencies are required.
 
 ## Games
 
@@ -26,4 +26,14 @@ Open `index.html` in a browser. You can also play the [online version](https://s
 - Immediate feedback with stars and crosses.
 - Enter key navigation.
 - Responsive layout for tablets and phones.
-- No dependencies: one HTML file.
+- No dependencies or build step.
+
+## School subjects and English
+
+The start page offers math, English, and Italian (coming soon). English activities use uppercase text and Italian instructions. Choose colors, school objects, animals, or toys, then explore, recognize pictures, play memory, solve clues, complete words, listen and touch, or arrange letters.
+
+Routes use English hashbang paths, for example `#!/math/friends` and `#!/english/animals/listen`. Reload and browser history preserve the selected activity. A new visit to an activity starts a new round.
+
+Speech uses an English voice from the browser, with British English preferred. Voice availability and quality depend on the device. Some voices require a connection. The game reports unavailable audio instead of using an Italian voice.
+
+For a local check, open `index.html` in a browser. Run automated checks with `node --test friends.test.js navigation.test.js english/*.test.js`.

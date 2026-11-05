@@ -1,0 +1,12 @@
+#learning-shell { width: 100%; max-width: 760px; }
+#learning-shell[hidden] { display: none; }
+#learning-shell .menu { margin: 10px auto 24px; }
+a.menu-card { display: block; text-decoration: none; color: inherit; }
+a.menu-card .menu-title, a.menu-card .menu-desc { display: block; }
+a.btn { text-decoration: none; text-align: center; }
+button:focus-visible, a:focus-visible { outline: 4px solid #5f27cd; outline-offset: 4px; }
+#view-home > .btn { margin-bottom: 18px; }
+#learning-shell h2, #learning-shell p { text-align: center; margin-bottom: 16px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+.practice-block { max-width: 700px; margin: 28px auto; }
+.practice-block .menu-card { border-color: #9b59b6; background: #fff8df; }

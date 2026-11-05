@@ -45,3 +45,23 @@ Italian activities cover difficult sounds (CHE/CHI, GHE/GHI, GN, GLI, SCE/SCI), 
 Italian routes include `#!/italian/sounds/complete` and `#!/italian/accents/dictation`. Audio requires an Italian device voice; unavailable voices produce a visible message. Human listening on the target device remains part of pronunciation validation.
 
 Run all checks with `node --test friends.test.js navigation.test.js english/*.test.js italian/*.test.js`.
+
+## Installable PWA
+
+The app includes a manifest, home-screen icons and a service worker. Host the repository contents over HTTPS. GitHub Pages can serve this app at `https://sbaia.github.io/math-game/`; all installation and offline paths are relative to that project directory. No build step is needed.
+
+On Android, open the HTTPS address in Chrome. Use INSTALLA APP when offered, or the browser menu's installation option. Browser support and the installation prompt depend on the device. The installed app opens without the normal browser toolbar. Direct `file://` launch still supports the games but cannot prepare offline installation.
+
+Open the app online once and wait for PRONTO PER GIOCARE ANCHE OFFLINE. Then the cached math, English and Italian games can open offline. Speech voices are supplied by the device or its provider: audio may still need a connection. Test Italian and English dictation on the target Android device, with the desired voices installed, before relying on offline audio.
+
+### Publish and update
+
+1. Publish the repository root through the existing GitHub Pages setup, including `manifest.webmanifest`, `sw.js`, `pwa.js`, `pwa.css` and `icons/`.
+2. Check the HTTPS URL on Android and install the app from Chrome.
+3. On each release that changes a cached file, increase the version in `sw.js`. Add any new runtime assets to its precache list.
+4. Deploy all files together. A new version downloads in the background. AGGIORNA E RIAPRI applies it when the user chooses; this restarts the current game and preserves its hash route.
+5. Keep the manifest `id`, deployment scope and start path stable so updates keep the same installed identity.
+
+The service worker caches only known files within this app's scope and preserves other applications' caches on the same origin. No microphone, tracking or extra account is added. A Google Play package is a separate future step, using the published PWA with Trusted Web Activity/Bubblewrap and the required store declarations.
+
+Run all checks with `node --test friends.test.js navigation.test.js english/*.test.js italian/*.test.js pwa-*.test.js`.

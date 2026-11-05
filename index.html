@@ -4,6 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Imparare Giocando!</title>
+  <meta name="theme-color" content="#5f27cd">
+  <meta name="description" content="Giochi di matematica, inglese e italiano per la scuola primaria.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Impara!">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="pwa.css">
   <link rel="stylesheet" href="english/english.css">
   <link rel="stylesheet" href="navigation.css">
   <link rel="stylesheet" href="italian/italian.css">
@@ -1875,5 +1883,11 @@
   <script src="italian/speech.js"></script>
   <script src="italian/games.js"></script>
   <script src="navigation.js"></script>
+  <aside class="pwa-tools" aria-label="INSTALLAZIONE E AGGIORNAMENTI">
+    <button id="pwa-install" class="btn btn-home" type="button" hidden>INSTALLA APP</button>
+    <button id="pwa-update" class="btn btn-new" type="button" hidden>AGGIORNA E RIAPRI</button>
+    <p id="pwa-status" role="status" aria-live="polite"></p>
+  </aside>
+  <script src="pwa.js"></script>
 </body>
 </html>

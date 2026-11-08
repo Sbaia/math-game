@@ -13,3 +13,6 @@ Behavior cases: correct/wrong in each mode; lowercase and NFC accepted but missi
 Tests use a small DOM and speech adapter harness. They check rendered user behavior through the public API; browser layout and real voice playback remain explicit parent QA checks. No test-only production exports.
 
 Self-review: production reviewed for spelling, Latin-only distractors, answer secrecy, finite lifecycle, replay races, strict accents, and whole-word-only audio. The test harness is an assumption about browser adapters, not a recorded browser fixture; parent owns real browser/voice QA. All nine tests are useful boundary tests with named plausible bugs; no private seams were added.
+
+## Visible answer feedback
+Correct and wrong answers have distinct green/red panels with symbols and colored selected choices or dictation input. Retry clears the previous result. Audio is a prominent control above the input. Existing grading, hints, and score rules do not change.

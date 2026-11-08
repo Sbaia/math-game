@@ -40,7 +40,7 @@
     function button(text, action, parent = panel) {
       const el = node('button', text, parent);
       el.type = 'button';
-      el.addEventListener('click', () => { if (alive) action(); });
+      el.addEventListener('click', () => { if (alive) action(el); });
       return el;
     }
     let audioStatus;
@@ -70,14 +70,15 @@
       node('p', 'PAROLA ' + (index + 1) + ' DI ' + words.length + ' · PUNTI: ' + score);
       const clue = mode === 'dictation' ? null : node('p', word.clue);
       if (clue) clue.className = 'italian-clue';
+      const feedback = node('p');
+      feedback.className = 'italian-feedback';
+      feedback.setAttribute('role', 'status');
       const choices = node('div');
       choices.className = 'italian-choices';
-      const feedback = node('p');
-      feedback.setAttribute('role', 'status');
       const actions = node('div');
       actions.className = 'italian-actions';
       let input;
-      function submit(value) {
+      function submit(value, selected) {
         if (answered) return;
         if (mode === 'dictation' && !listened) {
           feedback.textContent = 'PRIMA ASCOLTA TUTTA LA PAROLA.';
@@ -88,11 +89,16 @@
         speech.cancel();
         const correct = normalize(value) === (mode === 'complete' ? word.group : word.word);
         if (correct && !credited) { score++; credited = true; }
-        feedback.textContent = correct ? 'ESATTO! ' + word.word : 'RIPROVA! LA PAROLA È ' + word.word + '. INDIZIO: ' + word.clue;
+        feedback.setAttribute('data-result', correct ? 'correct' : 'wrong');
+        const selection = selected || input;
+        if (selection) selection.setAttribute('data-result', correct ? 'correct' : 'wrong');
+        feedback.textContent = correct ? '✓ ESATTO! ' + word.word : '✕ RIPROVA! LA PAROLA È ' + word.word + '. INDIZIO: ' + word.clue;
         actions.replaceChildren();
         if (!correct) button('RIPROVA', () => {
           answered = false;
           feedback.textContent = 'PROVA ANCORA.';
+          feedback.setAttribute('data-result', '');
+          if (selection) selection.setAttribute('data-result', '');
           actions.replaceChildren();
           if (input) { input.value = ''; input.focus(); }
         }, actions);
@@ -105,7 +111,7 @@
           if (answered) return;
           listened = false;
           speech.speak(word.word, () => { listened = true; });
-        }, choices);
+        }, choices).className = 'italian-listen-button';
         const form = node('form', '', choices);
         input = node('input', '', form);
         input.type = 'text'; input.autocomplete = 'off'; input.spellcheck = false;
@@ -135,9 +141,9 @@
           : (word.group.length === 2 && word.group[0] === word.group[1]
             ? [word.group[0], word.group + word.group[0]]
             : ({ CHE: ['CE', 'CHI'], CHI: ['CI', 'CHE'], GHE: ['GE', 'GHI'], GHI: ['GI', 'GHE'], GN: ['NI', 'GNI'], GNI: ['NI', 'GN'], GLI: ['LI', 'GI'], SCE: ['SCIE', 'SHE'], SCI: ['SI', 'SHI'] }[word.group]));
-        shuffle([...new Set([word.group, ...wrong])]).forEach(choice => button(choice, () => submit(choice), choices));
+        shuffle([...new Set([word.group, ...wrong])]).forEach(choice => button(choice, selected => submit(choice, selected), choices));
       } else {
-        shuffle([word.word, ...word.wrong]).forEach(choice => button(choice, () => submit(choice), choices));
+        shuffle([word.word, ...word.wrong]).forEach(choice => button(choice, selected => submit(choice, selected), choices));
       }
     }
     start();

@@ -75,8 +75,14 @@ test('listen hides the word, requires playback, and retries wrong selections', (
   assert.match(f.container.textContent, /PREMI PRIMA ASCOLTA/);
   press(f.container, '🔊 ASCOLTA / RIASCOLTA'); assert.equal(f.spoken[0].text, 'PINK');
   choices[1].click(); assert.match(f.container.textContent, /QUASI/);
+  assert.equal(byClass(f.container, 'en-feedback')[0].attributes['data-result'], 'wrong');
+  assert.equal(choices[1].attributes['data-result'], 'wrong');
   choices[0].click(); assert.match(f.container.textContent, /ESATTO/);
+  assert.equal(byClass(f.container, 'en-feedback')[0].attributes['data-result'], 'correct');
+  assert.equal(choices[0].attributes['data-result'], 'correct');
+  f.spoken[0].onerror(); assert.match(f.container.textContent, /ESATTO/);
   press(f.container, 'AVANTI →'); assert.equal(f.container.textContent.includes('RED'), false);
+  assert.equal(byClass(f.container, 'en-feedback')[0].attributes['data-result'], 'info');
 });
 
 // Catches: revealing the complete answer or accepting a wrong letter in the gap.

@@ -172,8 +172,7 @@ test('activation deletes only obsolete caches from this exact scope and claims c
   const b = browser();
   await b.event('install');
   const currentName = (await b.caches.keys())[0];
-  assert.match(currentName, /v1$/);
-  const ownOldName = currentName.replace(/v1$/, 'v0');
+  const ownOldName = currentName.slice(0, currentName.lastIndexOf(':') + 1) + 'obsolete';
   await b.caches.open(ownOldName);
   const sibling = browser('https://example.github.io/other-game/');
   await sibling.event('install');

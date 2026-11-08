@@ -21,3 +21,6 @@ The parent clarified that complete must select a missing letter, not enter a who
 
 ## Mixed practice
 The English category menu shows a separate PROVA block below the four categories. Its English route is #!/english/mixed. All seven activities are available. Each new mixed session selects two random words from each category (eight words total), then shuffles them. Restart selects a new sample. This keeps memory to sixteen cards and ensures every category occurs in each practice session.
+
+## Audio and answer feedback
+The listen button appears above the picture choices. Correct answers show a green result panel and a check symbol; wrong answers show a red result panel and a cross. Selected choices have the same result color. Feedback resets on retry/new rounds and cannot be overwritten by a voice-ready notification after grading. Memory pairs and spelling modes use the same visible outcomes.

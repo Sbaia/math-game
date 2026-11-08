@@ -1,7 +1,7 @@
 'use strict';
 
 // Bump this version whenever the app shell or any runtime asset changes.
-const VERSION = 'v1';
+const VERSION = 'v2';
 const SCOPE = new URL(self.registration.scope);
 const CACHE_PREFIX = `math-game:${encodeURIComponent(SCOPE.href)}:`;
 const CACHE_NAME = `${CACHE_PREFIX}${VERSION}`;

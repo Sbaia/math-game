@@ -3,13 +3,13 @@ const assert = require('node:assert/strict');
 const vm = require('node:vm');
 const fs = require('node:fs');
 class Element {
-  constructor(tag) { this.tagName = tag; this.children = []; this.events = {}; this.text = ''; this.value = ''; this.selectionStart = 0; this.selectionEnd = 0; }
+  constructor(tag) { this.tagName = tag; this.children = []; this.events = {}; this.text = ''; this.value = ''; this.selectionStart = 0; this.selectionEnd = 0; this.attributes = {}; }
   set textContent(value) { this.text = value; this.children = []; }
   get textContent() { return this.text + this.children.map(c => c.textContent).join(' '); }
   appendChild(child) { this.children.push(child); return child; }
   replaceChildren() { this.children = []; this.text = ''; }
   addEventListener(type, cb) { this.events[type] = cb; }
-  setAttribute() {}
+  setAttribute(name, value) { this.attributes[name] = value; }
   focus() {}
   setSelectionRange(start, end) { this.selectionStart = start; this.selectionEnd = end; }
   fire(type) { if (this.events[type]) this.events[type]({ preventDefault() {} }); }
@@ -32,7 +32,12 @@ test('completion and recognition reject wrong choices and accept correct retries
   for (const [mode, wrong, correct] of [['complete', 'CE', 'CHE'], ['recognize', 'FORCETTA', 'FORCHETTA']]) {
     const h = setup(); h.render('sounds', mode);
     h.click(wrong); assert.match(h.container.textContent, /RIPROVA! LA PAROLA È FORCHETTA/);
-    h.click('RIPROVA'); h.click(correct); assert.match(h.container.textContent, /ESATTO! FORCHETTA/);
+    assert.equal(h.all('p').find(el => el.className === 'italian-feedback').attributes['data-result'], 'wrong');
+    assert.equal(h.all('button').find(el => el.textContent === wrong).attributes['data-result'], 'wrong');
+    h.click('RIPROVA');
+    assert.equal(h.all('p').find(el => el.className === 'italian-feedback').attributes['data-result'], '');
+    h.click(correct); assert.match(h.container.textContent, /ESATTO! FORCHETTA/);
+    assert.equal(h.all('p').find(el => el.className === 'italian-feedback').attributes['data-result'], 'correct');
     h.click('AVANTI'); assert.match(h.container.textContent, /PAROLA 2 DI 8 · PUNTI: 1/);
   }
 });

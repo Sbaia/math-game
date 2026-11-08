@@ -10,3 +10,36 @@ button:focus-visible, a:focus-visible { outline: 4px solid #5f27cd; outline-offs
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
 .practice-block { max-width: 700px; margin: 28px auto; }
 .practice-block .menu-card { border-color: #9b59b6; background: #fff8df; }
+
+/* Shared answer states use symbols and text as well as color. */
+.en-feedback[data-result="correct"], .en-feedback[data-result="wrong"],
+.italian-feedback[data-result="correct"], .italian-feedback[data-result="wrong"] {
+  padding: 18px; border: 3px solid; border-radius: 18px;
+  font-size: clamp(1.15rem, 4vw, 1.5rem); font-weight: 800;
+}
+.english-app [data-result="correct"], .italian-game [data-result="correct"],
+.english-app .en-stage button[data-result="correct"], .italian-game .italian-choices button[data-result="correct"] {
+  color: #12532b; background: #daf5df; border-color: #188342;
+}
+.english-app [data-result="wrong"], .italian-game [data-result="wrong"],
+.english-app .en-stage button[data-result="wrong"], .italian-game .italian-choices button[data-result="wrong"] {
+  color: #8a1919; background: #ffe0e0; border-color: #c52d2d;
+}
+.english-app .en-stage button[data-result] { opacity: 1; }
+.en-audio-controls { display: flex; justify-content: center; margin: 8px 0 20px; }
+.en-audio-controls:empty { display: none; }
+.english-app .en-listen-button, .italian-game .italian-listen-button {
+  width: min(100%, 460px); min-height: 72px; padding: 18px 24px;
+  border: 3px solid #075f99; border-radius: 20px;
+  background: #087abe; color: #fff; font: inherit;
+  font-size: clamp(1.2rem, 4vw, 1.5rem); font-weight: 800;
+  cursor: pointer; box-shadow: 0 5px 0 #07517e;
+}
+.english-app .en-listen-button:hover:not(:disabled), .italian-game .italian-listen-button:hover {
+  background: #075f99; color: #fff;
+}
+.en-listen-button:disabled { opacity: .6; cursor: default; box-shadow: none; }
+.en-feedback:empty, .italian-feedback:empty { display: none; }
+.en-feedback { margin: 0 0 16px; }
+.message.answer-correct:not(:empty) { background: #daf5df; border-color: #188342; }
+.message.answer-wrong:not(:empty) { background: #ffe0e0; border-color: #c52d2d; }

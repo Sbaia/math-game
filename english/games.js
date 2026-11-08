@@ -52,12 +52,13 @@
     shell.setAttribute('aria-label', category.title + ' — ' + mode.title);
     const heading = node('h2', '', mode.icon + ' ' + mode.title);
     const progress = node('p', 'en-progress');
+    const audioControls = node('div', 'en-audio-controls');
     const stage = node('div', 'en-stage');
     const feedback = node('p', 'en-feedback');
     feedback.setAttribute('role', 'status');
     feedback.setAttribute('aria-live', 'polite');
     const controls = node('div', 'en-controls');
-    shell.append(heading, node('p', 'en-instructions', mode.description), progress, stage, feedback, controls);
+    shell.append(heading, node('p', 'en-instructions', mode.description), progress, audioControls, feedback, stage, controls);
     container.replaceChildren(shell);
     let active = true;
     let index = 0;
@@ -68,9 +69,16 @@
     let mismatch = [];
     let pairs = 0;
     let speech;
-    const sayFeedback = text => { if (active) feedback.textContent = text; };
+    let resultState = 'info';
+    const sayFeedback = (text, result = 'info') => {
+      if (!active) return;
+      resultState = result;
+      feedback.textContent = text;
+      feedback.setAttribute('data-result', result);
+      stage.setAttribute('data-result', result);
+    };
     speech = root.EnglishSpeech(() => {
-      if (active && mode.id === 'listen' && speech && speech.available()) sayFeedback('VOCE INGLESE PRONTA. PREMI ASCOLTA.');
+      if (active && !solved && !heard && mode.id === 'listen' && speech && speech.available()) sayFeedback('VOCE INGLESE PRONTA. PREMI ASCOLTA.');
     });
     dispose = () => {
       active = false;
@@ -82,7 +90,7 @@
     };
     function audio(item) {
       if (!active) return;
-      if (speech.speak(item.word, sayFeedback)) {
+      if (speech.speak(item.word, text => { if (!solved && resultState !== 'wrong') sayFeedback(text); })) {
         heard = true;
         if (mode.id === 'listen') sayFeedback('ASCOLTA E SCEGLI L’IMMAGINE.');
       }
@@ -94,22 +102,25 @@
       draw();
     }
     function finish() {
+      audioControls.replaceChildren();
       stage.replaceChildren(node('div', 'en-finish', '🌟 BRAVISSIMO! GIOCO COMPLETATO!'));
       controls.replaceChildren(button('RICOMINCIA', restart));
       progress.textContent = mode.id === 'memory' ? pairs + ' / ' + category.words.length + ' COPPIE' : order.length + ' / ' + order.length;
-      sayFeedback('HAI SCOPERTO TUTTE LE PAROLE!');
+      sayFeedback('✓ HAI SCOPERTO TUTTE LE PAROLE!', 'correct');
     }
     function success() {
       solved = true;
-      sayFeedback('ESATTO! 🌟 ' + order[index].word);
+      sayFeedback('✓ ESATTO! 🌟 ' + order[index].word, 'correct');
+      audioControls.querySelectorAll('button').forEach(el => { el.disabled = true; });
       stage.querySelectorAll('button, input').forEach(el => { el.disabled = true; });
       controls.append(button(index === order.length - 1 ? 'TERMINA' : 'AVANTI →', next));
     }
-    function answer(correct) {
+    function answer(correct, selected) {
       if (!active || solved) return;
       if (mode.id === 'listen' && !heard) { sayFeedback('PREMI PRIMA ASCOLTA.'); return; }
+      if (selected) selected.setAttribute('data-result', correct ? 'correct' : 'wrong');
       if (correct) success();
-      else sayFeedback('QUASI! RIPROVA, PUOI FARCELA.');
+      else sayFeedback('✕ QUASI! RIPROVA, PUOI FARCELA.', 'wrong');
     }
     function next() {
       if (!active) return;
@@ -121,7 +132,7 @@
       const others = shuffle(category.words.filter(w => w !== item)).slice(0, 3);
       const grid = node('div', 'en-choice-grid');
       shuffle([item, ...others]).forEach(option => {
-        const choice = button(textOnly ? option.word : '', () => answer(option === item), 'en-choice');
+        const choice = button(textOnly ? option.word : '', () => answer(option === item, choice), 'en-choice');
         if (textOnly) choice.lang = 'en';
         else choice.append(picture(option, false));
         grid.append(choice);
@@ -138,15 +149,17 @@
           tile.setAttribute('aria-label', card.image ? card.item.italian : card.item.word);
           if (!first) { first = {tile, card}; return; }
           if (first.card.item === card.item && first.card.image !== card.image) {
+            first.tile.setAttribute('data-result', 'correct'); tile.setAttribute('data-result', 'correct');
             first.tile.disabled = true; tile.disabled = true; first = null; pairs++;
             progress.textContent = pairs + ' / ' + category.words.length + ' COPPIE';
-            sayFeedback('COPPIA TROVATA! 🌟');
+            sayFeedback('✓ COPPIA TROVATA! 🌟', 'correct');
             if (pairs === category.words.length) finish();
           } else {
             mismatch = [first.tile, tile]; first = null;
-            sayFeedback('NON È LA COPPIA. GUARDA E POI RIPROVA.');
+            mismatch.forEach(el => el.setAttribute('data-result', 'wrong'));
+            sayFeedback('✕ NON È LA COPPIA. GUARDA E POI RIPROVA.', 'wrong');
             controls.append(button('RIPROVA', () => {
-              mismatch.forEach(el => { el.textContent = '?'; el.setAttribute('aria-label', 'CARTA COPERTA'); });
+              mismatch.forEach(el => { el.textContent = '?'; el.setAttribute('data-result', ''); el.setAttribute('aria-label', 'CARTA COPERTA'); });
               mismatch = []; controls.lastChild.remove(); sayFeedback('CERCA UNA COPPIA.');
             }));
           }
@@ -165,7 +178,8 @@
       const bank = node('div', 'en-letter-bank');
       const alternatives = shuffle(Array.from('ABCDEFGHIJKLMNOPQRSTUVWXYZ').filter(char => char !== letter)).slice(0, 3);
       shuffle([letter, ...alternatives]).forEach(char => {
-        bank.append(button(char, () => answer(char === letter), 'en-letter'));
+        const choice = button(char, () => answer(char === letter, choice), 'en-letter');
+        bank.append(choice);
       });
       stage.append(bank);
     }
@@ -199,21 +213,23 @@
     }
     function draw() {
       solved = false; heard = false;
+      audioControls.replaceChildren();
       stage.replaceChildren(); controls.replaceChildren(button('RICOMINCIA', restart));
-      feedback.textContent = '';
+      sayFeedback('');
       progress.textContent = mode.id === 'memory' ? '0 / ' + category.words.length + ' COPPIE' : (index + 1) + ' / ' + order.length;
       const item = order[index];
       if (mode.id === 'memory') { memory(); return; }
       if (mode.id === 'explore') {
         stage.append(picture(item, true), node('h3', 'en-vocabulary', item.word));
         stage.lastChild.lang = 'en';
-        controls.append(button('🔊 ASCOLTA', () => audio(item)), button(index === order.length - 1 ? 'TERMINA' : 'AVANTI →', next));
+        audioControls.append(button('🔊 ASCOLTA', () => audio(item), 'en-listen-button'));
+        controls.append(button(index === order.length - 1 ? 'TERMINA' : 'AVANTI →', next));
       } else if (mode.id === 'recognize') {
         stage.append(node('h3', 'en-vocabulary', item.word)); stage.lastChild.lang = 'en'; choices(item, false);
       } else if (mode.id === 'detective') {
         stage.append(node('p', 'en-clue', item.clue)); choices(item, true);
       } else if (mode.id === 'listen') {
-        controls.append(button('🔊 ASCOLTA / RIASCOLTA', () => audio(item))); choices(item, false);
+        audioControls.append(button('🔊 ASCOLTA / RIASCOLTA', () => audio(item), 'en-listen-button')); choices(item, false);
         if (!speech.available()) sayFeedback('AUDIO INGLESE NON DISPONIBILE. ATTIVA UNA VOCE INGLESE O SCEGLI UN ALTRO GIOCO.');
       } else if (mode.id === 'complete') complete(item);
       else letters(item);

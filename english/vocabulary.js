@@ -21,7 +21,7 @@
   };
   const categoryData = [
     { id: 'colors', title: 'COLORI', icon: '🎨', words: [
-      ['pink','ROSA','#f49bc2'],['red','ROSSO','#e44848'],['green','VERDE','#399a55'],['brown','MARRONE','#8a593b'],['blue','BLU','#3974d6'],['yellow','GIALLO','#ffda43'],['purple','VIOLA','#9952bd'],['black','NERO','#20212b'],['orange','ARANCIONE','#fb922f'],['white','BIANCO','#fff']] },
+      ['pink','ROSA','#f49bc2'],['red','ROSSO','#e44848'],['green','VERDE','#399a55'],['brown','MARRONE','#8a593b'],['blue','BLU','#3974d6'],['yellow','GIALLO','#ffda43'],['violet','VIOLA','#9952bd'],['black','NERO','#20212b'],['orange','ARANCIONE','#fb922f'],['white','BIANCO','#fff']] },
     { id: 'school', title: 'SCUOLA', icon: '🎒', words: [
       ['pen','PENNA','SCRIVO CON L’INCHIOSTRO.'],['school bag','ZAINO','PORTO I LIBRI SULLE SPALLE.'],['pencil','MATITA','SCRIVO E POSSO CANCELLARE.'],['rubber','GOMMA','CANCELLO I SEGNI DELLA MATITA.'],['book','LIBRO','HO TANTE PAGINE DA LEGGERE.'],['ruler','RIGHELLO','MISURO E TRACCIO LINEE DRITTE.'],['pencil case','ASTUCCIO','TENGO INSIEME PENNE E MATITE.'],['sharpener','TEMPERINO','RENDO APPUNTITA LA MATITA.']] },
     { id: 'animals', title: 'ANIMALI', icon: '🐾', words: [

@@ -24,3 +24,6 @@ The English category menu shows a separate PROVA block below the four categories
 
 ## Audio and answer feedback
 The listen button appears above the picture choices. Correct answers show a green result panel and a check symbol; wrong answers show a red result panel and a cross. Selected choices have the same result color. Feedback resets on retry/new rounds and cannot be overwritten by a voice-ready notification after grading. Memory pairs and spelling modes use the same visible outcomes.
+
+## Whole-word writing from pictures
+The write activity shows a picture and a blank text field, with no letter tiles or written English answer. The child types the whole word and submits with CONTROLLA or Enter. Compare case-insensitively with trimmed/collapsed spaces; wrong answers stay editable, correct answers lock and allow next. Reuse colored feedback, finite rounds, restart, all categories and mixed practice. The purple-colored vocabulary item is named VIOLET, as requested by the user.

@@ -188,7 +188,7 @@ test('cancelled utterances cannot publish stale failures and missing APIs give f
 // Catches: mixed practice silently using one category or all 34 memory pairs.
 test('mixed practice includes two words per category and keeps memory to sixteen cards', () => {
   const f = setup(); f.app.render(f.container, 'mixed', 'explore');
-  const groups = [new Set(['PINK','RED','GREEN','BROWN','BLUE','YELLOW','PURPLE','BLACK','ORANGE','WHITE']), new Set(['PEN','SCHOOL BAG','PENCIL','RUBBER','BOOK','RULER','PENCIL CASE','SHARPENER']), new Set(['FROG','BIRD','RABBIT','TORTOISE','FISH','DOG','CAT','HAMSTER']), new Set(['CARDS','DOLL','VIDEOGAME','PLANE','BALL','CAR','SKATEBOARD','BIKE'])];
+  const groups = [new Set(['PINK','RED','GREEN','BROWN','BLUE','YELLOW','VIOLET','BLACK','ORANGE','WHITE']), new Set(['PEN','SCHOOL BAG','PENCIL','RUBBER','BOOK','RULER','PENCIL CASE','SHARPENER']), new Set(['FROG','BIRD','RABBIT','TORTOISE','FISH','DOG','CAT','HAMSTER']), new Set(['CARDS','DOLL','VIDEOGAME','PLANE','BALL','CAR','SKATEBOARD','BIKE'])];
   const seen = [];
   for (let n = 0; n < 8; n++) {
     seen.push(byClass(f.container, 'en-vocabulary')[0].textContent);
@@ -200,4 +200,44 @@ test('mixed practice includes two words per category and keeps memory to sixteen
   press(f.container, 'RICOMINCIA'); assert.match(f.container.textContent, /1 \/ 8/);
   f.app.render(f.container, 'mixed', 'memory');
   assert.equal(byClass(f.container, 'en-memory-card').length, 16);
+});
+
+// Catches: showing letter tiles/the answer or accepting misspelled whole-word input.
+test('writing from a picture retries errors, accepts keyboard input and multiword spacing, and resets', () => {
+  const f = setup(); f.app.render(f.container, 'school', 'write');
+  const submit = value => {
+    f.container.querySelectorAll('input')[0].value = value;
+    f.container.querySelectorAll('form')[0].onsubmit({preventDefault(){}});
+  };
+  assert.equal(byClass(f.container, 'en-letter').length, 0);
+  assert.equal(f.container.textContent.includes('PEN'), false);
+  submit(''); assert.match(f.container.textContent, /SCRIVI LA PAROLA PRIMA/);
+  submit('pencil'); assert.equal(byClass(f.container, 'en-feedback')[0].attributes['data-result'], 'wrong');
+  assert.equal(f.container.querySelectorAll('input')[0].disabled, false);
+  submit('pen'); assert.match(f.container.textContent, /ESATTO! 🌟 PEN/);
+  assert.equal(f.container.querySelectorAll('input')[0].disabled, true);
+  press(f.container, 'AVANTI →');
+  assert.equal(f.container.querySelectorAll('input')[0].value, '');
+  submit('  school   bag '); assert.match(f.container.textContent, /ESATTO! 🌟 SCHOOL BAG/);
+  press(f.container, 'RICOMINCIA');
+  assert.equal(f.container.querySelectorAll('input')[0].value, '');
+  assert.equal(byClass(f.container, 'en-feedback')[0].attributes['data-result'], 'info');
+});
+
+// Catches: the revised school vocabulary still accepting or presenting PURPLE instead of VIOLET.
+test('color writing teaches VIOLET and completes a finite round', () => {
+  const f=setup(); f.app.render(f.container, 'colors', 'write');
+  const words=['PINK','RED','GREEN','BROWN','BLUE','YELLOW','VIOLET','BLACK','ORANGE','WHITE'];
+  words.forEach((word,index)=>{
+    const input=f.container.querySelectorAll('input')[0];
+    const form=f.container.querySelectorAll('form')[0];
+    if(word==='VIOLET') {
+      input.value='PURPLE';form.onsubmit({preventDefault(){}});
+      assert.equal(byClass(f.container,'en-feedback')[0].attributes['data-result'],'wrong');
+    }
+    input.value=word; form.onsubmit({preventDefault(){}});
+    assert.match(f.container.textContent,new RegExp('ESATTO! 🌟 '+word));
+    press(f.container,index===9?'TERMINA':'AVANTI →');
+  });
+  assert.match(f.container.textContent,/GIOCO COMPLETATO/);
 });

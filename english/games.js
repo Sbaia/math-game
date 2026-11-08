@@ -6,6 +6,7 @@
     ['recognize','TROVA L’IMMAGINE','👀','LEGGI E TOCCA L’IMMAGINE GIUSTA.'],
     ['memory','MEMORY','🃏','ABBINA OGNI IMMAGINE ALLA PAROLA INGLESE.'],
     ['detective','DETECTIVE','🕵️','LEGGI L’INDIZIO E TROVA LA PAROLA INGLESE.'],
+    ['write','SCRIVI LA PAROLA','⌨️','GUARDA L’IMMAGINE E SCRIVI LA PAROLA INTERA.'],
     ['complete','COMPLETA LA PAROLA','✏️','GUARDA L’IMMAGINE E TOCCA LA LETTERA MANCANTE.'],
     ['listen','ASCOLTA E TOCCA','🔊','ASCOLTA LA PAROLA E TOCCA L’IMMAGINE.'],
     ['letters','RIORDINA LE LETTERE','🔤','TOCCA LE LETTERE NELL’ORDINE GIUSTO.']
@@ -183,6 +184,33 @@
       });
       stage.append(bank);
     }
+    function write(item) {
+      stage.append(picture(item, false));
+      const form = node('form', 'en-write-form');
+      const label = node('label', '', 'SCRIVI LA PAROLA INGLESE:');
+      const input = node('input', 'en-write-input');
+      input.type = 'text'; input.lang = 'en'; input.autocomplete = 'off'; input.spellcheck = false;
+      input.setAttribute('autocapitalize', 'characters');
+      input.setAttribute('autocorrect', 'off');
+      input.oninput = () => {
+        if (!active) return;
+        const position = input.selectionStart;
+        input.value = input.value.toUpperCase();
+        if (position !== null && input.setSelectionRange) input.setSelectionRange(position, position);
+      };
+      label.append(input);
+      const check = button('CONTROLLA', () => {});
+      check.type = 'submit';
+      form.append(label, check);
+      form.onsubmit = event => {
+        event.preventDefault();
+        if (!active || solved) return;
+        const value = input.value.trim().replace(/\s+/g, ' ').toUpperCase();
+        if (!value) { sayFeedback('SCRIVI LA PAROLA PRIMA DI CONTROLLARE.'); return; }
+        answer(value === item.word, input);
+      };
+      stage.append(form);
+    }
     function letters(item) {
       stage.append(picture(item, false));
       const result = node('p', 'en-letter-result');
@@ -231,7 +259,8 @@
       } else if (mode.id === 'listen') {
         audioControls.append(button('🔊 ASCOLTA / RIASCOLTA', () => audio(item), 'en-listen-button')); choices(item, false);
         if (!speech.available()) sayFeedback('AUDIO INGLESE NON DISPONIBILE. ATTIVA UNA VOCE INGLESE O SCEGLI UN ALTRO GIOCO.');
-      } else if (mode.id === 'complete') complete(item);
+      } else if (mode.id === 'write') write(item);
+      else if (mode.id === 'complete') complete(item);
       else letters(item);
     }
     draw();

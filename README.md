@@ -65,3 +65,5 @@ Open the app online once and wait for PRONTO PER GIOCARE ANCHE OFFLINE. Then the
 The service worker caches only known files within this app's scope and preserves other applications' caches on the same origin. No microphone, tracking or extra account is added. A Google Play package is a separate future step, using the published PWA with Trusted Web Activity/Bubblewrap and the required store declarations.
 
 Run all checks with `node --test friends.test.js navigation.test.js english/*.test.js italian/*.test.js pwa-*.test.js`.
+
+English also includes SCRIVI LA PAROLA (`#!/english/school/write`): type the entire English word from the picture, then press CONTROLLA or Enter. This activity supports every category and mixed practice. Colors use VIOLET for VIOLA.

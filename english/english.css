@@ -32,3 +32,6 @@
 .en-choice:disabled,.en-letter:disabled { opacity:.55; cursor:default; }
 .en-finish { font-size:clamp(1.6rem,5vw,2.5rem); font-weight:800; padding:50px 0; }
 @media(max-width:420px) { .en-memory-grid { gap:6px; } .en-memory-card { padding:4px; min-height:95px; } .en-memory-card .en-picture { font-size:40px; } .en-memory-card svg { height:58px; } .en-controls { gap:8px; } .en-button { padding:10px; } }
+.en-write-form { display: grid; gap: 18px; justify-items: center; margin-top: 20px; }
+.en-write-form label { display: grid; gap: 12px; width: 100%; font-weight: 700; }
+.en-write-input { width: min(100%, 420px); min-height: 58px; margin: auto; padding: 12px; border: 3px solid #7770a8; border-radius: 14px; font: inherit; font-size: 1.5rem; text-align: center; text-transform: uppercase; }
